@@ -1,0 +1,25 @@
+{
+  "name": "教習所多言語音声アプリ Google翻訳版",
+  "short_name": "Google教習",
+  "description": "教習所向け多言語音声再生アプリ Google翻訳版",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#16a05a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

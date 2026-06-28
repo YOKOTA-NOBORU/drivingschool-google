@@ -1,0 +1,1799 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>教習所多言語音声アプリ Google翻訳版</title><style>
+body{margin:0;background:#f4f7fb;color:#172033;font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif}header{position:sticky;top:0;background:linear-gradient(135deg,#1266f1,#0b3f94);color:white;padding:14px;z-index:5;transition:transform .22s ease,opacity .22s ease}header.hide{transform:translateY(-100%);opacity:0;pointer-events:none}h1{font-size:18px;margin:0 0 4px}.sub{font-size:12px;margin:0;opacity:.9}.toolbar{position:sticky;top:67px;background:white;padding:10px;border-bottom:1px solid #d9e2ef;z-index:4;transition:transform .22s ease,opacity .22s ease}.toolbar.hide{transform:translateY(-125%);opacity:0;pointer-events:none}input,select,button{font:inherit}input,select{width:100%;padding:9px;border:1px solid #d9e2ef;border-radius:12px;margin:4px 0;background:white}#q{font-size:16px;padding:11px;border:2px solid #1266f1;background:#f8fbff;width:65%}.searchRow{display:flex;gap:8px;align-items:center}.micbtn{width:72px;flex:none}.controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.modes,.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}.filters{display:none}body.allmode .filters{display:grid}.modes button,.filters button,.toolbtn{border:1px solid #d9e2ef;border-radius:12px;background:#eaf2ff;color:#0b3f94;padding:9px 4px;font-weight:900;font-size:13px}.modes button.active{background:#1266f1;color:white}.filters button.off{background:#f1f3f6;color:#8490a3;text-decoration:line-through}.danger.active{background:#d61f2c!important}.tools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}main{padding:12px;max-width:900px;margin:auto}.note{background:#fff8df;border:1px solid #f0d98c;border-radius:12px;padding:10px;font-size:13px}.cat{font-weight:900;color:#5d6b82;margin:18px 4px 8px}.card{width:100%;text-align:left;background:white;border:1px solid #d9e2ef;border-radius:16px;margin:8px 0;padding:14px;box-shadow:0 2px 8px #1020400d;position:relative}.card.emergency{border:2px solid #d61f2c;background:#fff4f4}.jp{font-size:18px;font-weight:900;padding-right:46px}.target{margin-top:8px;font-size:18px;color:#0b4e2f;font-weight:900}.ruby{margin-top:3px;font-size:14px;color:#5d6b82}.badge{font-size:12px;color:#0b3f94;background:#eaf2ff;border-radius:999px;padding:3px 8px;display:inline-block;margin-top:6px;font-weight:800}.fav{position:absolute;right:10px;top:10px;border:0;background:#fff3c4;border-radius:999px;width:36px;height:36px;font-size:20px}.footer{position:sticky;bottom:0;background:#fffffff2;border-top:1px solid #d9e2ef;padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.big{border:0;border-radius:12px;padding:12px;color:white;background:#1266f1;font-weight:900}.stop{background:#3b4556}.status,.count{font-size:12px;color:#5d6b82;margin-top:4px}.panel{display:none;background:white;border:1px solid #d9e2ef;border-radius:14px;padding:10px;margin-top:8px}.panel.show{display:block}.historyItem{border-bottom:1px solid #eef2f8;padding:8px 0;font-size:14px}@media(max-width:560px){.controls{grid-template-columns:1fr}.modes,.filters{grid-template-columns:repeat(3,1fr)}.tools{grid-template-columns:1fr}}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.formbtn{border:1px solid #d9e2ef;border-radius:12px;background:#eaf2ff;color:#0b3f94;padding:9px 4px;font-weight:900;font-size:13px}
+.formbtn.primary{background:#1266f1;color:white}
+.formbtn.warn{background:#fff3c4;color:#6a4b00}
+.small{font-size:12px;color:#5d6b82}
+.loading{opacity:.65}
+.del{display:none;margin-top:8px;border:0;border-radius:10px;background:#9b1c31;color:white;padding:8px;font-weight:900}
+.card.custom{border-color:#7a5cff}
+.card.custom .del{display:inline-block}
+@media(max-width:560px){.formgrid{grid-template-columns:1fr}}
+
+.editbtn,.movebtn{border:0;border-radius:10px;background:#eaf2ff;color:#0b3f94;padding:8px 10px;font-weight:900;margin:6px 6px 0 0}
+.movebtn{background:#f1f3f6;color:#3b4556}
+.cardActions{margin-top:8px}
+.editPanelTitle{font-weight:900;margin-bottom:6px}
+.tools{grid-template-columns:1fr 1fr 1fr!important}
+
+#editPanel.show{display:block;position:relative;z-index:20;margin:12px 0 16px;background:#ffffff}
+#editPanel input,#editPanel select{font-size:16px}
+body.editing .toolbar{position:relative;top:auto}
+body.editing header{position:relative}
+
+body:not(.adminMode) .adminOnly{display:none!important}
+.adminBadge{display:none;background:#fff3c4;color:#6a4b00;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:900;margin-top:6px}
+body.adminMode .adminBadge{display:inline-block}
+.adminExit{border:1px solid #d9e2ef;border-radius:12px;background:#fff3c4;color:#6a4b00;padding:9px 4px;font-weight:900;font-size:13px}
+
+.backupBox{background:#f8fbff;border:1px dashed #1266f1;border-radius:14px;padding:10px;margin-top:10px}
+.backupBox textarea{width:100%;min-height:120px;border:1px solid #d9e2ef;border-radius:12px;padding:8px;font-family:monospace;box-sizing:border-box}
+
+.dragHandle{display:none;border:0;border-radius:10px;background:#3b4556;color:#fff;padding:8px 10px;font-weight:900;margin:6px 6px 0 0;touch-action:pan-y;cursor:grab}
+body.favMode .dragHandle{display:inline-block}
+.card.dragging{opacity:.55;transform:scale(.99)}
+.card.dropTarget{outline:3px dashed #1266f1}
+
+body.favMode .movebtn{display:none!important}
+body.favMode .dragHandle{display:none!important}
+body.favMode .card{touch-action:pan-y}
+body.favMode .card::after{content:none!important;display:none!important}
+body.favMode.adminMode .card::after{content:none!important;display:none!important}
+
+.hidebtn{border:0;border-radius:10px;background:#fff3c4;color:#6a4b00;padding:8px 10px;font-weight:900;margin:6px 6px 0 0}
+.hiddenListItem{border-bottom:1px solid #eef2f8;padding:10px 0;font-size:14px}
+.hiddenBadge{background:#f1f3f6;color:#8490a3;border-radius:999px;padding:3px 8px;font-size:12px;font-weight:900}
+body:not(.adminMode) .hidebtn{display:none!important}
+
+.editOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;padding:14px;box-sizing:border-box;overflow:auto}
+.editOverlay.show{display:block}
+.editModal{background:#fff;border-radius:18px;padding:14px;max-width:680px;margin:24px auto 80px;box-shadow:0 10px 30px rgba(0,0,0,.22)}
+.editModalTitle{font-weight:900;font-size:18px;margin-bottom:8px}
+.editModal input,.editModal select{font-size:16px;box-sizing:border-box}
+body.modalOpen{overflow:hidden}
+.editbtn{border:0;border-radius:10px;background:#eaf2ff;color:#0b3f94;padding:8px 10px;font-weight:900;margin:6px 6px 0 0}
+body:not(.adminMode) .editbtn{display:none!important}
+
+.addOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9998;padding:14px;box-sizing:border-box;overflow:auto;-webkit-overflow-scrolling:touch}
+.addOverlay.show{display:block}
+.addModal{background:#fff;border-radius:18px;padding:14px;max-width:680px;margin:24px auto 100px;box-shadow:0 10px 30px rgba(0,0,0,.22)}
+.addModalTitle{font-weight:900;font-size:18px;margin-bottom:8px}
+.addModal input,.addModal select{font-size:16px;box-sizing:border-box}
+.addModal .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:560px){.addModal .formgrid{grid-template-columns:1fr}}
+body.modalOpen{overflow:hidden}
+
+/* simple copy protection */
+body, .card, .jp, .target, .ruby, .badge{
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
+}
+input, textarea{
+  -webkit-user-select:text;
+  user-select:text;
+  -webkit-touch-callout:default;
+}
+
+.panelOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9997;padding:14px;box-sizing:border-box;overflow:auto;-webkit-overflow-scrolling:touch}
+.panelOverlay.show{display:block}
+.panelModal{background:#fff;border-radius:18px;padding:14px;max-width:680px;margin:24px auto 100px;box-shadow:0 10px 30px rgba(0,0,0,.22)}
+.panelModalTitle{font-weight:900;font-size:18px;margin-bottom:8px}
+body.modalOpen{overflow:hidden}
+
+.historyItem{cursor:pointer;border-bottom:1px solid #eef2f8;padding:10px 6px;border-radius:10px}
+.historyItem:active{background:#eaf2ff}
+.historyHint{font-size:12px;color:#8490a3;margin:6px 0 10px}
+
+.histDeleteBtn{border:0;border-radius:10px;background:#fff4f4;color:#b00020;padding:6px 9px;font-weight:900;margin-left:8px}
+.histRow{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid #eef2f8;padding:8px 0}
+.histText{flex:1;padding:8px 6px;border-radius:10px}
+.histText:active{background:#eaf2ff}
+
+body.favMode .card{touch-action:pan-y}
+.card.favDragging{opacity:.55;transform:scale(.99);outline:2px dashed #1266f1}
+
+.multiCatBtn{border:1px solid #d9e2ef;border-radius:12px;background:#fff;color:#172033;padding:9px 8px;font-weight:900;font-size:13px}
+.multiCatPanel{display:none;background:#fff;border:1px solid #d9e2ef;border-radius:14px;padding:10px;margin:8px 0;box-shadow:0 2px 8px #10204014}
+.multiCatPanel.show{display:block}
+.multiCatGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:220px;overflow:auto;-webkit-overflow-scrolling:touch}
+.multiCatItem{display:flex;align-items:center;gap:6px;background:#f8fbff;border:1px solid #eef2f8;border-radius:10px;padding:7px;font-size:13px;font-weight:700}
+.multiCatItem input{width:auto!important}
+.multiCatActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+@media(max-width:560px){.multiCatGrid{grid-template-columns:1fr}}
+
+/* single category hidden: use multi category only */
+#cat{display:none!important}
+label[for="cat"], .catLabel{display:none!important}
+.multiCatBtn{width:100%;margin-top:4px}
+
+/* category header cleanup */
+.catHeader.hiddenByMulti{display:none!important}
+
+.rubyToggleBtn{border:1px solid #d9e2ef;border-radius:12px;background:#fff;color:#172033;padding:9px 8px;font-weight:900;font-size:13px}
+body.hideRuby .ruby{display:none!important}
+
+/* ruby toggle beside search */
+.rubyToggleBtn{border:1px solid #d9e2ef;border-radius:12px;background:#fff;color:#172033;padding:9px 8px;font-weight:900;font-size:13px}
+.searchRubyRow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+body.hideRuby .ruby{display:none!important}
+.extraRuby{font-size:13px;color:#6b7588;margin-top:4px}
+body.hideRuby .extraRuby{display:none!important}
+
+/* ruby toggle button in search-button position */
+.rubyToggleBtn{border:1px solid #d9e2ef;border-radius:12px;background:#fff;color:#172033;padding:9px 8px;font-weight:900;font-size:13px;white-space:nowrap}
+body.hideRuby .ruby{display:none!important}
+body.hideRuby .extraRuby{display:none!important}
+
+/* ruby button optimized placement */
+.searchRubyRow{display:block!important}
+#q{width:100%!important;box-sizing:border-box}
+.rubyToggleBtn{border:0;border-radius:12px;background:#eaf2ff;color:#0b3f94;padding:9px 8px;font-weight:900;font-size:13px;white-space:nowrap}
+body.hideRuby .ruby{display:none!important}
+body.hideRuby .extraRuby{display:none!important}
+
+/* fixed pronunciation button */
+.rubyToggleBtn{
+  min-width:0!important;
+  width:auto!important;
+  text-align:center!important;
+  border:0!important;
+  border-radius:12px!important;
+  background:#eaf2ff!important;
+  color:#0b3f94!important;
+  padding:9px 8px!important;
+  font-weight:900!important;
+  font-size:13px!important;
+  white-space:nowrap!important;
+}
+body.hideRuby .ruby{display:none!important}
+body.hideRuby .extraRuby{display:none!important}
+
+/* pronunciation button same as other menu buttons */
+.rubyToggleBtn{
+  width:auto!important;
+  min-width:0!important;
+  text-align:center!important;
+  border:1px solid #d9e2ef!important;
+  border-radius:12px!important;
+  background:#eaf2ff!important;
+  color:#0b3f94!important;
+  padding:9px 8px!important;
+  font-weight:900!important;
+  font-size:13px!important;
+  white-space:nowrap!important;
+  box-sizing:border-box!important;
+}
+
+/* conversation translation modal */
+.convOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9996;padding:14px;box-sizing:border-box;overflow:auto;-webkit-overflow-scrolling:touch}
+.convOverlay.show{display:block}
+.convModal{background:#fff;border-radius:18px;padding:14px;max-width:680px;margin:24px auto 100px;box-shadow:0 10px 30px rgba(0,0,0,.22)}
+.convModalTitle{font-weight:900;font-size:18px;margin-bottom:8px}
+.convModal textarea,.convModal select{font-size:16px;box-sizing:border-box;width:100%}
+.convModal textarea{min-height:92px;border:1px solid #d9e2ef;border-radius:12px;padding:10px}
+.convResult{background:#f8fbff;border:1px solid #eef2f8;border-radius:14px;padding:12px;margin-top:10px;font-size:17px;line-height:1.6}
+.convSmall{font-size:12px;color:#8490a3;margin-top:6px}
+.convActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.convActions3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+@media(max-width:560px){.convActions3{grid-template-columns:1fr}}
+
+/* conversation simple mode */
+.convActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.convModal textarea{min-height:110px}
+
+/* translate-and-play / history replay patch */
+button:disabled{opacity:.65;filter:grayscale(.15)}
+.histReplayBtn{border:0;border-radius:10px;background:#1266f1;color:white;padding:8px 10px;font-weight:900;margin-top:6px}
+.histText{cursor:pointer}
+
+</style>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#1266f1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="教習音声アプリ">
+<link rel="apple-touch-icon" href="./icon-512.png">
+</head><body>
+<header><h1 id="appTitle">富山教習所向け 多言語音声アプリ</h1><p class="sub">全165フレーズ / 自動翻訳登録 / 表示切替 / 4言語</p><div id="adminBadge" class="adminBadge">編集モード ON</div></header><section class="toolbar"><div class="searchRow"><input id="q" placeholder="検索"></div><div class="controls"><select id="lang"><option value="vi">ベトナム語</option><option value="en">英語</option><option value="zh">中国語</option><option value="pt">ポルトガル語</option></select><select id="cat"></select>
+<button id="multiCatBtn" class="multiCatBtn" onclick="toggleMultiCatPanel()">項目を選択</button>
+<div id="multiCatPanel" class="multiCatPanel">
+  <div class="small">表示したい項目を選択できます。</div>
+  <div id="multiCatGrid" class="multiCatGrid"></div>
+  <div class="multiCatActions">
+    <button class="formbtn" onclick="selectAllCategories()">すべて選択</button>
+    <button class="formbtn" onclick="clearMultiCategories()">解除</button>
+  </div>
+</div>
+<select id="rate"><option value="0.75">ゆっくり</option><option value="0.9" selected>標準</option><option value="1.05">少し速い</option></select></div><div class="modes"><button data-mode="すべて" class="active">すべて</button><button data-mode="教習">教習</button><button data-mode="指導">指導</button><button data-mode="冬道">冬道</button><button data-mode="MT車">MT車</button><button data-mode="検定">検定</button><button data-mode="質問">質問</button><button data-mode="お気に入り">⭐お気に入り</button><button data-mode="緊急" class="danger">🚨緊急</button></div><div class="filters"><button data-filter="冬道">冬道 ON</button><button data-filter="MT車">MT車 ON</button><button data-filter="検定">検定 ON</button><button data-filter="緊急">緊急 ON</button><button data-filter="質問">質問 ON</button></div><div class="tools"><button id="rubyToggleBtn" class="toolbtn rubyToggleBtn" onclick="toggleRubyDisplay()">発音 ON</button><button class="toolbtn" onclick="openConversationModal()">💬会話翻訳</button><button class="toolbtn" onclick="toggleAdd()">＋自動翻訳登録</button><button class="toolbtn adminOnly" onclick="toggleBackup()">💾バックアップ</button><button class="toolbtn adminOnly" onclick="toggleHiddenPanel()">👁非表示管理</button><button class="adminExit adminOnly" onclick="disableAdminMode()">編集終了</button><button class="toolbtn" onclick="toggleHistory()">📜 履歴</button></div><div id="status" class="status">音声準備中...</div><div id="count" class="count"></div>
+<div id="addPanel" class="panel">
+<b>新規フレーズ登録・自動翻訳</b>
+<p class="small">日本語だけ入力して「4言語へ自動翻訳」を押してください。翻訳結果を確認・修正してから登録できます。</p>
+<div class="formgrid">
+<select id="newMode"><option>教習</option><option>指導</option><option>冬道</option><option>MT車</option><option>検定</option><option>緊急</option><option>質問</option></select>
+<input id="newCat" placeholder="項目：例）基本操作">
+</div>
+<input id="newJp" placeholder="日本語：例）ブレーキを構えましょう">
+<div class="formgrid">
+<button class="formbtn primary" onclick="autoTranslate()">4言語へ自動翻訳</button>
+<button class="formbtn warn" onclick="copyFromJapanese()">日本語を仮入力</button>
+</div>
+<input id="newVi" placeholder="ベトナム語">
+<input id="newRuby" placeholder="カタカナ発音（必要なら手入力）">
+<input id="newEn" placeholder="英語">
+<input id="newZh" placeholder="中国語">
+<input id="newPt" placeholder="ポルトガル語">
+<div class="formgrid">
+<button class="formbtn primary" onclick="addPhrase()">登録する</button>
+<button class="formbtn" onclick="clearCustom()">登録フレーズ全削除</button>
+</div>
+</div>
+
+<div id="editPanel" class="panel">
+<div class="editPanelTitle">フレーズ編集</div>
+<input type="hidden" id="editId">
+<div class="formgrid">
+<select id="editMode"><option>教習</option><option>指導</option><option>冬道</option><option>MT車</option><option>検定</option><option>緊急</option><option>質問</option></select>
+<input id="editCat" placeholder="項目">
+</div>
+<input id="editJp" placeholder="日本語">
+<input id="editVi" placeholder="ベトナム語">
+<input id="editRuby" placeholder="カタカナ発音">
+<input id="editEn" placeholder="英語">
+<input id="editZh" placeholder="中国語">
+<input id="editPt" placeholder="ポルトガル語">
+<div class="formgrid">
+<button class="formbtn primary" onclick="saveEditPhrase()">編集を保存</button>
+<button class="formbtn" onclick="closeEditPanel()">閉じる</button>
+</div>
+<p class="small">編集内容はこの端末に保存されます。元に戻すボタンで初期フレーズへ戻せます。</p>
+</div>
+
+<div id="backupPanel" class="panel adminOnly">
+<b>バックアップ・復元</b>
+<p class="small">編集内容・登録フレーズ・お気に入り順を保存できます。機種変更やChromeデータ消去対策に使えます。</p>
+<div class="formgrid">
+<button class="formbtn primary" onclick="exportBackup()">バックアップを作成</button>
+<button class="formbtn" onclick="importBackup()">復元する</button>
+</div>
+<div class="backupBox">
+<textarea id="backupText" placeholder="ここにバックアップデータが表示されます。復元する時はバックアップデータを貼り付けてください。"></textarea>
+</div>
+<div class="formgrid">
+<button class="formbtn" onclick="copyBackupText()">コピー</button>
+<button class="formbtn warn" onclick="downloadBackupFile()">ファイル保存</button>
+</div>
+</div>
+
+<div id="hiddenPanel" class="panel adminOnly">
+<b>非表示フレーズ管理</b>
+<p class="small">非表示にしたフレーズをここから再表示できます。</p>
+<div id="hiddenList"></div>
+</div>
+<div id="historyPanel" class="panel"></div></section><main><div id="list"></div></main><section class="footer"><button class="big stop" onclick="stopVoice()">停止</button><button class="big" onclick="playFirst()">最初を再生</button></section>
+<script>
+const BASE=[{"id": 1, "mode": "教習", "category": "基本操作", "jp": "おはようございます", "vi": "Chào buổi sáng", "en": "Good morning.", "zh": "早上好。", "pt": "Bom dia.", "ruby": "チャオ ブオイ サン"}, {"id": 2, "mode": "教習", "category": "基本操作", "jp": "こんにちは", "vi": "Xin chào", "en": "Hello.", "zh": "你好。", "pt": "Olá.", "ruby": "シン チャオ"}, {"id": 3, "mode": "教習", "category": "基本操作", "jp": "教習を始めます", "vi": "Bắt đầu buổi học lái xe", "en": "We will start the driving lesson.", "zh": "开始驾驶教习。", "pt": "Vamos começar a aula de direção.", "ruby": "バット ダウ ブオイ ホック ライ セー"}, {"id": 4, "mode": "教習", "category": "基本操作", "jp": "シートベルトを締めてください", "vi": "Thắt dây an toàn", "en": "Please fasten your seat belt.", "zh": "请系好安全带。", "pt": "Por favor, coloque o cinto de segurança.", "ruby": "タッ ザイ アン トアン"}, {"id": 5, "mode": "教習", "category": "基本操作", "jp": "ドアを閉めてください", "vi": "Đóng cửa", "en": "Please close the door.", "zh": "请关上车门。", "pt": "Por favor, feche a porta.", "ruby": "ドン クア"}, {"id": 6, "mode": "教習", "category": "基本操作", "jp": "ドアを開けてください", "vi": "Mở cửa", "en": "Please open the door.", "zh": "请打开车门。", "pt": "Por favor, abra a porta.", "ruby": "モー クア"}, {"id": 7, "mode": "教習", "category": "基本操作", "jp": "ミラーを合わせてください", "vi": "Chỉnh gương", "en": "Please adjust the mirrors.", "zh": "请调整后视镜。", "pt": "Por favor, ajuste os espelhos.", "ruby": "チン グオン"}, {"id": 8, "mode": "教習", "category": "基本操作", "jp": "ミラーを確認してください", "vi": "Kiểm tra gương", "en": "Please check the mirrors.", "zh": "请确认后视镜。", "pt": "Por favor, verifique os espelhos.", "ruby": "キエム チャ グオン"}, {"id": 9, "mode": "教習", "category": "基本操作", "jp": "ルームミラーを見てください", "vi": "Nhìn gương giữa", "en": "Please check the rearview mirror.", "zh": "请看车内后视镜。", "pt": "Por favor, olhe o espelho retrovisor interno.", "ruby": "ニン グオン ズア"}, {"id": 10, "mode": "教習", "category": "基本操作", "jp": "サイドミラーを見てください", "vi": "Nhìn gương bên", "en": "Please check the side mirror.", "zh": "请看侧后视镜。", "pt": "Por favor, olhe o espelho lateral.", "ruby": "ニン グオン ベン"}, {"id": 11, "mode": "教習", "category": "基本操作", "jp": "エンジンをかけてください", "vi": "Khởi động động cơ", "en": "Please start the engine.", "zh": "请启动发动机。", "pt": "Por favor, ligue o motor.", "ruby": "コイ ドン ドン コー"}, {"id": 12, "mode": "教習", "category": "基本操作", "jp": "エンジンを止めてください", "vi": "Tắt động cơ", "en": "Please turn off the engine.", "zh": "请关闭发动机。", "pt": "Por favor, desligue o motor.", "ruby": "タット ドン コー"}, {"id": 13, "mode": "教習", "category": "基本操作", "jp": "ブレーキを踏んでください", "vi": "Đạp phanh", "en": "Please press the brake.", "zh": "请踩刹车。", "pt": "Por favor, pise no freio.", "ruby": "ダップ ファン"}, {"id": 14, "mode": "教習", "category": "基本操作", "jp": "アクセルを踏んでください", "vi": "Đạp ga", "en": "Please press the accelerator.", "zh": "请踩油门。", "pt": "Por favor, pise no acelerador.", "ruby": "ダップ ガー"}, {"id": 15, "mode": "MT車", "category": "MT車", "jp": "クラッチを踏んでください", "vi": "Đạp côn", "en": "Please press the clutch.", "zh": "请踩离合器。", "pt": "Por favor, pise na embreagem.", "ruby": "ダップ コン"}, {"id": 16, "mode": "教習", "category": "基本操作", "jp": "サイドブレーキを下ろしてください", "vi": "Hạ phanh tay", "en": "Please release the parking brake.", "zh": "请放下手刹。", "pt": "Por favor, solte o freio de mão.", "ruby": "ハー ファン タイ"}, {"id": 17, "mode": "教習", "category": "基本操作", "jp": "サイドブレーキを引いてください", "vi": "Kéo phanh tay", "en": "Please apply the parking brake.", "zh": "请拉手刹。", "pt": "Por favor, puxe o freio de mão.", "ruby": "ケオ ファン タイ"}, {"id": 18, "mode": "教習", "category": "基本操作", "jp": "ギアを入れてください", "vi": "Vào số", "en": "Please put it in gear.", "zh": "请挂档。", "pt": "Por favor, coloque a marcha.", "ruby": "ヴァオ ソー"}, {"id": 19, "mode": "MT車", "category": "MT車", "jp": "ニュートラルにしてください", "vi": "Về số mo", "en": "Please put it in neutral.", "zh": "请挂空档。", "pt": "Por favor, coloque em ponto morto.", "ruby": "ヴェー ソー モー"}, {"id": 20, "mode": "MT車", "category": "MT車", "jp": "1速に入れてください", "vi": "Vào số 1", "en": "Please shift into first gear.", "zh": "请挂一档。", "pt": "Por favor, coloque a primeira marcha.", "ruby": "ヴァオ ソー モッ"}, {"id": 21, "mode": "MT車", "category": "MT車", "jp": "2速に入れてください", "vi": "Vào số 2", "en": "Please shift into second gear.", "zh": "请挂二档。", "pt": "Por favor, coloque a segunda marcha.", "ruby": "ヴァオ ソー ハイ"}, {"id": 22, "mode": "MT車", "category": "MT車", "jp": "3速に入れてください", "vi": "Vào số 3", "en": "Please shift into third gear.", "zh": "请挂三档。", "pt": "Por favor, coloque a terceira marcha.", "ruby": "ヴァオ ソー バー"}, {"id": 23, "mode": "MT車", "category": "MT車", "jp": "4速に入れてください", "vi": "Vào số 4", "en": "Please shift into fourth gear.", "zh": "请挂四档。", "pt": "Por favor, coloque a quarta marcha.", "ruby": "ヴァオ ソー ボン"}, {"id": 24, "mode": "教習", "category": "基本操作", "jp": "発進してください", "vi": "Xuất phát", "en": "Please start moving.", "zh": "请起步。", "pt": "Por favor, comece a andar.", "ruby": "スアット ファット"}, {"id": 25, "mode": "教習", "category": "発進・走行", "jp": "ゆっくり進んでください", "vi": "Đi chậm thôi", "en": "Please go slowly.", "zh": "请慢慢行驶。", "pt": "Por favor, vá devagar.", "ruby": "ディー チャム トイ"}, {"id": 26, "mode": "教習", "category": "発進・走行", "jp": "まっすぐ進んでください", "vi": "Đi thẳng", "en": "Please go straight.", "zh": "请直行。", "pt": "Por favor, siga em frente.", "ruby": "ディー タン"}, {"id": 27, "mode": "教習", "category": "基本操作", "jp": "止まってください", "vi": "Dừng xe", "en": "Please stop the car.", "zh": "请停车。", "pt": "Pare o carro, por favor.", "ruby": "ズン セー"}, {"id": 28, "mode": "教習", "category": "基本操作", "jp": "停車してください", "vi": "Dừng lại", "en": "Please pull over and stop.", "zh": "请靠边停车。", "pt": "Por favor, pare o carro.", "ruby": "ズン ライ"}, {"id": 29, "mode": "教習", "category": "基本操作", "jp": "一時停止してください", "vi": "Dừng tạm thời", "en": "Please make a temporary stop.", "zh": "请暂时停车。", "pt": "Por favor, faça uma parada temporária.", "ruby": "ズン タム トイ"}, {"id": 30, "mode": "教習", "category": "基本操作", "jp": "ウインカーを出してください", "vi": "Bật xi nhan", "en": "Please turn on the turn signal.", "zh": "请打转向灯。", "pt": "Por favor, ligue a seta.", "ruby": "バッ シーニャン"}, {"id": 31, "mode": "教習", "category": "基本操作", "jp": "ウインカーを消してください", "vi": "Tắt xi nhan", "en": "Please turn off the turn signal.", "zh": "请关闭转向灯。", "pt": "Por favor, desligue a seta.", "ruby": "タッ シーニャン"}, {"id": 32, "mode": "教習", "category": "基本操作", "jp": "右ウインカーです", "vi": "Xi nhan phải", "en": "Right turn signal.", "zh": "右转向灯。", "pt": "Seta para a direita.", "ruby": "シーニャン ファーイ"}, {"id": 33, "mode": "教習", "category": "基本操作", "jp": "左ウインカーです", "vi": "Xi nhan trái", "en": "Left turn signal.", "zh": "左转向灯。", "pt": "Seta para a esquerda.", "ruby": "シーニャン チャーイ"}, {"id": 34, "mode": "教習", "category": "基本操作", "jp": "ライトをつけてください", "vi": "Bật đèn", "en": "Please turn on the lights.", "zh": "请打开车灯。", "pt": "Por favor, acenda os faróis.", "ruby": "バット デン"}, {"id": 35, "mode": "教習", "category": "基本操作", "jp": "ライトを消してください", "vi": "Tắt đèn", "en": "Please turn off the lights.", "zh": "请关闭车灯。", "pt": "Por favor, apague os faróis.", "ruby": "タット デン"}, {"id": 36, "mode": "教習", "category": "基本操作", "jp": "ワイパーを動かしてください", "vi": "Bật gạt mưa", "en": "Please turn on the wipers.", "zh": "请打开雨刷。", "pt": "Por favor, ligue o limpador de para-brisa.", "ruby": "バット ガット ムア"}, {"id": 37, "mode": "教習", "category": "発進・走行", "jp": "周囲を確認してください", "vi": "Quan sát xung quanh", "en": "Please check your surroundings.", "zh": "请确认周围情况。", "pt": "Por favor, observe ao redor.", "ruby": "クアン サット スン クアン"}, {"id": 38, "mode": "教習", "category": "発進・走行", "jp": "前を見てください", "vi": "Nhìn phía trước", "en": "Please look ahead.", "zh": "请看前方。", "pt": "Por favor, olhe para a frente.", "ruby": "ニン フィア チュオック"}, {"id": 39, "mode": "教習", "category": "右左折", "jp": "右を確認してください", "vi": "Kiểm tra bên phải", "en": "Please check the right side.", "zh": "请确认右侧。", "pt": "Por favor, verifique o lado direito.", "ruby": "キエム チャ ベン ファーイ"}, {"id": 40, "mode": "教習", "category": "右左折", "jp": "左を確認してください", "vi": "Kiểm tra bên trái", "en": "Please check the left side.", "zh": "请确认左侧。", "pt": "Por favor, verifique o lado esquerdo.", "ruby": "キエム チャ ベン チャーイ"}, {"id": 41, "mode": "教習", "category": "右左折", "jp": "後方を確認してください", "vi": "Kiểm tra phía sau", "en": "Please check behind you.", "zh": "请确认后方。", "pt": "Por favor, verifique atrás.", "ruby": "キエム チャ フィア サウ"}, {"id": 42, "mode": "教習", "category": "右左折", "jp": "目視してください", "vi": "Quan sát trực tiếp", "en": "Please check visually.", "zh": "请直接目视确认。", "pt": "Por favor, verifique visualmente.", "ruby": "クアン サット チュック ティエップ"}, {"id": 43, "mode": "教習", "category": "右左折", "jp": "右に曲がってください", "vi": "Rẽ phải", "en": "Please turn right.", "zh": "请向右转。", "pt": "Por favor, vire à direita.", "ruby": "レー ファーイ"}, {"id": 44, "mode": "教習", "category": "右左折", "jp": "左に曲がってください", "vi": "Rẽ trái", "en": "Please turn left.", "zh": "请向左转。", "pt": "Por favor, vire à esquerda.", "ruby": "レー チャーイ"}, {"id": 45, "mode": "教習", "category": "右左折", "jp": "右折してください", "vi": "Rẽ phải", "en": "Please turn right.", "zh": "请右转。", "pt": "Por favor, vire à direita.", "ruby": "レー ファーイ"}, {"id": 46, "mode": "教習", "category": "右左折", "jp": "左折してください", "vi": "Rẽ trái", "en": "Please turn left.", "zh": "请左转。", "pt": "Por favor, vire à esquerda.", "ruby": "レー チャーイ"}, {"id": 47, "mode": "教習", "category": "右左折", "jp": "右へ寄せてください", "vi": "Tấp sang phải", "en": "Please move over to the right.", "zh": "请靠右。", "pt": "Por favor, encoste à direita.", "ruby": "タップ サン ファーイ"}, {"id": 48, "mode": "教習", "category": "右左折", "jp": "左へ寄せてください", "vi": "Tấp sang trái", "en": "Please move over to the left.", "zh": "请靠左。", "pt": "Por favor, encoste à esquerda.", "ruby": "タップ サン チャーイ"}, {"id": 49, "mode": "教習", "category": "右左折", "jp": "ハンドルを右へ回してください", "vi": "Xoay vô lăng sang phải", "en": "Turn the steering wheel to the right.", "zh": "请向右转方向盘。", "pt": "Vire o volante para a direita.", "ruby": "ソアイ ヴォーラン サン ファーイ"}, {"id": 50, "mode": "教習", "category": "右左折", "jp": "ハンドルを左へ回してください", "vi": "Xoay vô lăng sang trái", "en": "Turn the steering wheel to the left.", "zh": "请向左转方向盘。", "pt": "Vire o volante para a esquerda.", "ruby": "ソアイ ヴォーラン サン チャーイ"}, {"id": 51, "mode": "教習", "category": "駐車・方向変換", "jp": "ハンドルを戻してください", "vi": "Trả lái lại", "en": "Please straighten the steering wheel.", "zh": "请回正方向盘。", "pt": "Por favor, endireite o volante.", "ruby": "チャー ライ ライ"}, {"id": 52, "mode": "教習", "category": "右左折", "jp": "もっと右です", "vi": "Thêm bên phải", "en": "More to the right.", "zh": "再往右一点。", "pt": "Mais à direita.", "ruby": "テム ベン ファーイ"}, {"id": 53, "mode": "教習", "category": "右左折", "jp": "もっと左です", "vi": "Thêm bên trái", "en": "More to the left.", "zh": "再往左一点。", "pt": "Mais à esquerda.", "ruby": "テム ベン チャーイ"}, {"id": 54, "mode": "教習", "category": "場内課題", "jp": "S字コースです", "vi": "Đường chữ S", "en": "This is the S-curve course.", "zh": "这是S形路线。", "pt": "Este é o percurso em S.", "ruby": "ドゥオン チュー エス"}, {"id": 55, "mode": "教習", "category": "場内課題", "jp": "クランクコースです", "vi": "Đường Crank", "en": "This is the crank course.", "zh": "这是曲折窄路路线。", "pt": "Este é o percurso em cotovelo.", "ruby": "ドゥオン クランク"}, {"id": 56, "mode": "教習", "category": "場内課題", "jp": "脱輪に注意してください", "vi": "Chú ý rơi bánh xe", "en": "Be careful not to drop the wheel off the curb.", "zh": "请注意不要压出轮胎。", "pt": "Cuidado para a roda não sair da pista.", "ruby": "チュー イ ゾイ バイン セー"}, {"id": 57, "mode": "教習", "category": "場内課題", "jp": "ポールに注意してください", "vi": "Chú ý cọc tiêu", "en": "Watch out for the pole.", "zh": "请注意标杆。", "pt": "Cuidado com o cone/poste.", "ruby": "チュー イ コック ティエウ"}, {"id": 58, "mode": "教習", "category": "場内課題", "jp": "大回りしないでください", "vi": "Đừng cua rộng quá", "en": "Do not turn too wide.", "zh": "不要转弯太大。", "pt": "Não faça a curva muito aberta.", "ruby": "ドゥン クア ロン クア"}, {"id": 59, "mode": "教習", "category": "場内課題", "jp": "内輪差に注意してください", "vi": "Chú ý bánh sau", "en": "Watch the rear wheel tracking.", "zh": "请注意内轮差。", "pt": "Cuidado com a diferença de trajetória das rodas.", "ruby": "チュー イ バイン サウ"}, {"id": 60, "mode": "MT車", "category": "MT車", "jp": "坂道発進です", "vi": "Khởi hành ngang dốc", "en": "This is a hill start.", "zh": "这是坡道起步。", "pt": "Esta é uma saída em subida.", "ruby": "コイ ハイン ガン ゾック"}, {"id": 61, "mode": "教習", "category": "坂道", "jp": "ブレーキを保持してください", "vi": "Giữ phanh", "en": "Keep pressing the brake.", "zh": "请保持踩刹车。", "pt": "Mantenha o freio pressionado.", "ruby": "ズー ファン"}, {"id": 62, "mode": "MT車", "category": "MT車", "jp": "半クラッチです", "vi": "Nửa côn", "en": "Use half clutch.", "zh": "请使用半离合。", "pt": "Use meia embreagem.", "ruby": "ヌア コン"}, {"id": 63, "mode": "教習", "category": "坂道", "jp": "ゆっくりアクセルを踏んでください", "vi": "Tăng ga từ từ", "en": "Press the accelerator slowly.", "zh": "请慢慢踩油门。", "pt": "Pise no acelerador devagar.", "ruby": "タン ガー トゥ トゥ"}, {"id": 64, "mode": "MT車", "category": "MT車", "jp": "後退しないでください", "vi": "Đừng để xe trôi lùi", "en": "Do not let the car roll backward.", "zh": "不要让车后退。", "pt": "Não deixe o carro voltar para trás.", "ruby": "ドゥン デー セー チョイ ルイ"}, {"id": 65, "mode": "教習", "category": "路上教習", "jp": "信号を確認してください", "vi": "Kiểm tra đèn giao thông", "en": "Please check the traffic light.", "zh": "请确认信号灯。", "pt": "Por favor, verifique o semáforo.", "ruby": "キエム チャ デン ザオ トン"}, {"id": 66, "mode": "教習", "category": "路上教習", "jp": "赤信号です", "vi": "Đèn đỏ", "en": "It is a red light.", "zh": "是红灯。", "pt": "O sinal está vermelho.", "ruby": "デン ドー"}, {"id": 67, "mode": "教習", "category": "路上教習", "jp": "青信号です", "vi": "Đèn xanh", "en": "It is a green light.", "zh": "是绿灯。", "pt": "O sinal está verde.", "ruby": "デン サイン"}, {"id": 68, "mode": "教習", "category": "路上教習", "jp": "黄色信号です", "vi": "Đèn vàng", "en": "It is a yellow light.", "zh": "是黄灯。", "pt": "O sinal está amarelo.", "ruby": "デン ヴァン"}, {"id": 69, "mode": "教習", "category": "路上教習", "jp": "横断歩道があります", "vi": "Có vạch qua đường", "en": "There is a pedestrian crossing.", "zh": "前方有人行横道。", "pt": "Há uma faixa de pedestres.", "ruby": "コー ヴァック クア ドゥオン"}, {"id": 70, "mode": "教習", "category": "路上教習", "jp": "歩行者に注意してください", "vi": "Chú ý người đi bộ", "en": "Watch out for pedestrians.", "zh": "请注意行人。", "pt": "Cuidado com os pedestres.", "ruby": "チュー イ グオイ ディ ボ"}, {"id": 71, "mode": "教習", "category": "路上教習", "jp": "自転車に注意してください", "vi": "Chú ý xe đạp", "en": "Watch out for bicycles.", "zh": "请注意自行车。", "pt": "Cuidado com as bicicletas.", "ruby": "チュー イ セー ダップ"}, {"id": 72, "mode": "教習", "category": "路上教習", "jp": "子どもに注意してください", "vi": "Chú ý trẻ em", "en": "Watch out for children.", "zh": "请注意儿童。", "pt": "Cuidado com as crianças.", "ruby": "チュー イ チェー エム"}, {"id": 73, "mode": "教習", "category": "路上教習", "jp": "対向車に注意してください", "vi": "Chú ý xe đối diện", "en": "Watch out for oncoming cars.", "zh": "请注意对向车辆。", "pt": "Cuidado com os carros em sentido contrário.", "ruby": "チュー イ セー ドイ ジエン"}, {"id": 74, "mode": "教習", "category": "路上教習", "jp": "車間距離を取ってください", "vi": "Giữ khoảng cách", "en": "Please keep a safe distance.", "zh": "请保持车距。", "pt": "Por favor, mantenha distância.", "ruby": "ズー クアン カック"}, {"id": 75, "mode": "教習", "category": "路上教習", "jp": "速度を上げてください", "vi": "Tăng tốc", "en": "Please speed up.", "zh": "请加速。", "pt": "Por favor, aumente a velocidade.", "ruby": "タン トック"}, {"id": 76, "mode": "教習", "category": "路上教習", "jp": "速度を落としてください", "vi": "Giảm tốc", "en": "Please slow down.", "zh": "请减速。", "pt": "Por favor, reduza a velocidade.", "ruby": "ザム トック"}, {"id": 77, "mode": "教習", "category": "路上教習", "jp": "制限速度です", "vi": "Tốc độ giới hạn", "en": "This is the speed limit.", "zh": "这是限速。", "pt": "Este é o limite de velocidade.", "ruby": "トック ド ゾイ ハン"}, {"id": 78, "mode": "教習", "category": "路上教習", "jp": "40キロです", "vi": "Bốn mươi km", "en": "It is 40 kilometers per hour.", "zh": "限速40公里。", "pt": "É 40 quilômetros por hora.", "ruby": "ボン ムオイ キロ"}, {"id": 79, "mode": "教習", "category": "路上教習", "jp": "50キロです", "vi": "Năm mươi km", "en": "It is 50 kilometers per hour.", "zh": "限速50公里。", "pt": "É 50 quilômetros por hora.", "ruby": "ナム ムオイ キロ"}, {"id": 80, "mode": "教習", "category": "路上教習", "jp": "車線変更してください", "vi": "Chuyển làn", "en": "Please change lanes.", "zh": "请变更车道。", "pt": "Por favor, mude de faixa.", "ruby": "チュエン ラン"}, {"id": 81, "mode": "教習", "category": "路上教習", "jp": "右車線へ移ってください", "vi": "Chuyển sang làn phải", "en": "Please move to the right lane.", "zh": "请变更到右侧车道。", "pt": "Por favor, mude para a faixa da direita.", "ruby": "チュエン サン ラン ファーイ"}, {"id": 82, "mode": "教習", "category": "路上教習", "jp": "左車線へ移ってください", "vi": "Chuyển sang làn trái", "en": "Please move to the left lane.", "zh": "请变更到左侧车道。", "pt": "Por favor, mude para a faixa da esquerda.", "ruby": "チュエン サン ラン チャーイ"}, {"id": 83, "mode": "教習", "category": "路上教習", "jp": "合流してください", "vi": "Nhập làn", "en": "Please merge into the lane.", "zh": "请并入车道。", "pt": "Por favor, entre na faixa.", "ruby": "ニャップ ラン"}, {"id": 84, "mode": "教習", "category": "路上教習", "jp": "交差点です", "vi": "Ngã tư", "en": "This is an intersection.", "zh": "这里是交叉路口。", "pt": "Este é um cruzamento.", "ruby": "ガー トゥ"}, {"id": 85, "mode": "教習", "category": "路上教習", "jp": "カーブです", "vi": "Khúc cua", "en": "This is a curve.", "zh": "这里是弯道。", "pt": "Esta é uma curva.", "ruby": "クック クア"}, {"id": 86, "mode": "教習", "category": "路上教習", "jp": "踏切です", "vi": "Đường sắt giao cắt", "en": "This is a railroad crossing.", "zh": "这里是铁路道口。", "pt": "Esta é uma passagem de nível.", "ruby": "ドゥオン サット ザオ カット"}, {"id": 87, "mode": "教習", "category": "駐車・方向変換", "jp": "駐車してください", "vi": "Đỗ xe", "en": "Please park the car.", "zh": "请停车入位。", "pt": "Por favor, estacione o carro.", "ruby": "ドー セー"}, {"id": 88, "mode": "教習", "category": "駐車・方向変換", "jp": "バックしてください", "vi": "Lùi xe", "en": "Please reverse.", "zh": "请倒车。", "pt": "Por favor, dê ré.", "ruby": "ルイ セー"}, {"id": 89, "mode": "教習", "category": "駐車・方向変換", "jp": "車庫入れしてください", "vi": "Lùi vào chỗ đỗ", "en": "Please back into the parking space.", "zh": "请倒入停车位。", "pt": "Por favor, entre de ré na vaga.", "ruby": "ルイ ヴァオ チョー ドー"}, {"id": 90, "mode": "教習", "category": "駐車・方向変換", "jp": "方向変換です", "vi": "Đổi hướng xe", "en": "This is a direction change exercise.", "zh": "这是方向变换。", "pt": "Este é o exercício de mudança de direção.", "ruby": "ドイ フオン セー"}, {"id": 91, "mode": "教習", "category": "駐車・方向変換", "jp": "前へ出てください", "vi": "Tiến lên", "en": "Please move forward.", "zh": "请向前开。", "pt": "Por favor, avance.", "ruby": "ティエン レン"}, {"id": 92, "mode": "教習", "category": "駐車・方向変換", "jp": "切り返してください", "vi": "Tiến lùi điều chỉnh", "en": "Please adjust by moving forward and back.", "zh": "请前后调整。", "pt": "Por favor, ajuste avançando e dando ré.", "ruby": "ティエン ルイ ディエウ チン"}, {"id": 93, "mode": "指導", "category": "声掛け", "jp": "落ち着いてください", "vi": "Bình tĩnh", "en": "Please stay calm.", "zh": "请冷静。", "pt": "Por favor, mantenha a calma.", "ruby": "ビン ティン"}, {"id": 94, "mode": "指導", "category": "声掛け", "jp": "緊張しなくて大丈夫です", "vi": "Không cần căng thẳng", "en": "You do not need to be nervous.", "zh": "不用紧张。", "pt": "Não precisa ficar nervoso.", "ruby": "コン カン カン タン"}, {"id": 95, "mode": "指導", "category": "声掛け", "jp": "慌てないでください", "vi": "Đừng vội", "en": "Do not rush.", "zh": "请不要慌张。", "pt": "Não tenha pressa.", "ruby": "ドゥン ヴォイ"}, {"id": 96, "mode": "指導", "category": "声掛け", "jp": "気を付けてください", "vi": "Cẩn thận", "en": "Please be careful.", "zh": "请小心。", "pt": "Por favor, tenha cuidado.", "ruby": "カン タン"}, {"id": 97, "mode": "指導", "category": "声掛け", "jp": "もう一度やりましょう", "vi": "Làm lại lần nữa", "en": "Let's do it again.", "zh": "我们再做一次。", "pt": "Vamos fazer mais uma vez.", "ruby": "ラム ライ ラン ヌア"}, {"id": 98, "mode": "指導", "category": "声掛け", "jp": "最初からやりましょう", "vi": "Làm lại từ đầu", "en": "Let's start from the beginning.", "zh": "我们从头再来。", "pt": "Vamos fazer desde o começo.", "ruby": "ラム ライ トゥ ダウ"}, {"id": 99, "mode": "指導", "category": "声掛け", "jp": "大丈夫です", "vi": "Không sao", "en": "It is okay.", "zh": "没关系。", "pt": "Está tudo bem.", "ruby": "コン サオ"}, {"id": 100, "mode": "指導", "category": "声掛け", "jp": "問題ありません", "vi": "Không có vấn đề", "en": "There is no problem.", "zh": "没有问题。", "pt": "Não há problema.", "ruby": "コン コー ヴァン デ"}, {"id": 101, "mode": "指導", "category": "声掛け", "jp": "よくできました", "vi": "Làm tốt lắm", "en": "Good job.", "zh": "做得很好。", "pt": "Muito bem.", "ruby": "ラム トット ラム"}, {"id": 102, "mode": "指導", "category": "声掛け", "jp": "上手です", "vi": "Rất tốt", "en": "Very good.", "zh": "很好。", "pt": "Muito bom.", "ruby": "ザット トット"}, {"id": 103, "mode": "指導", "category": "声掛け", "jp": "その調子です", "vi": "Tiếp tục như vậy", "en": "Keep it up.", "zh": "就这样继续。", "pt": "Continue assim.", "ruby": "ティエップ トゥック ニュー ヴァイ"}, {"id": 104, "mode": "指導", "category": "声掛け", "jp": "安全確認が足りません", "vi": "Kiểm tra an toàn chưa đủ", "en": "Safety checks are not enough.", "zh": "安全确认不够。", "pt": "A verificação de segurança não foi suficiente.", "ruby": "キエム チャ アン トアン チュア ドゥ"}, {"id": 105, "mode": "指導", "category": "声掛け", "jp": "ミラー確認をしてください", "vi": "Kiểm tra gương", "en": "Please check the mirror.", "zh": "请确认后视镜。", "pt": "Por favor, verifique o espelho.", "ruby": "キエム チャ グオン"}, {"id": 106, "mode": "指導", "category": "声掛け", "jp": "目視確認をしてください", "vi": "Quan sát trực tiếp", "en": "Please check visually.", "zh": "请目视确认。", "pt": "Por favor, verifique visualmente.", "ruby": "クアン サット チュック ティエップ"}, {"id": 107, "mode": "検定", "category": "検定", "jp": "修了検定です", "vi": "Thi kết thúc giai đoạn 1", "en": "This is the first-stage completion test.", "zh": "这是阶段结束考试。", "pt": "Este é o exame de conclusão da primeira etapa.", "ruby": "ティー ケット トゥック ザイ ドアン モッ"}, {"id": 108, "mode": "検定", "category": "検定", "jp": "卒業検定です", "vi": "Thi tốt nghiệp lái xe", "en": "This is the graduation driving test.", "zh": "这是毕业考试。", "pt": "Este é o exame final de direção.", "ruby": "ティー トット ギエップ ライ セー"}, {"id": 109, "mode": "質問", "category": "終了・質問", "jp": "質問はありますか", "vi": "Có câu hỏi không?", "en": "Do you have any questions?", "zh": "有问题吗？", "pt": "Você tem alguma pergunta?", "ruby": "コー カウ ホイ コン"}, {"id": 110, "mode": "質問", "category": "終了・質問", "jp": "わかりましたか", "vi": "Bạn hiểu chưa?", "en": "Do you understand?", "zh": "明白了吗？", "pt": "Você entendeu?", "ruby": "バン ヒエウ チュア"}, {"id": 111, "mode": "指導", "category": "終了・質問", "jp": "もう一度説明します", "vi": "Tôi sẽ giải thích lại", "en": "I will explain again.", "zh": "我再说明一次。", "pt": "Vou explicar novamente.", "ruby": "トイ セー ザイ ティック ライ"}, {"id": 112, "mode": "指導", "category": "終了・質問", "jp": "もっとゆっくり話します", "vi": "Tôi sẽ nói chậm hơn", "en": "I will speak more slowly.", "zh": "我会说慢一点。", "pt": "Vou falar mais devagar.", "ruby": "トイ セー ノイ チャム ホン"}, {"id": 113, "mode": "指導", "category": "終了・質問", "jp": "今日はここまでです", "vi": "Hôm nay đến đây thôi", "en": "That is all for today.", "zh": "今天到这里。", "pt": "Por hoje é só.", "ruby": "ホム ナイ デン ダイ トイ"}, {"id": 114, "mode": "指導", "category": "終了・質問", "jp": "今日の教習は終わりです", "vi": "Buổi học hôm nay kết thúc", "en": "Today's lesson is finished.", "zh": "今天的教习结束了。", "pt": "A aula de hoje terminou.", "ruby": "ブオイ ホック ホム ナイ ケット トゥック"}, {"id": 115, "mode": "指導", "category": "終了・質問", "jp": "今日はここまでです。よくできました。", "vi": "Hôm nay đến đây thôi. Bạn đã làm tốt.", "en": "That is all for today. You did well.", "zh": "今天到这里。你做得很好。", "pt": "Por hoje é só. Você foi bem.", "ruby": "ホム ナイ デン ダイ トイ。バン ダー ラム トット"}, {"id": 116, "mode": "指導", "category": "終了・質問", "jp": "また頑張りましょう", "vi": "Cùng cố gắng lần sau", "en": "Let's do our best next time.", "zh": "下次继续加油。", "pt": "Vamos nos esforçar na próxima vez.", "ruby": "クン コー ガン ラン サウ"}, {"id": 117, "mode": "指導", "category": "終了・質問", "jp": "ありがとうございます", "vi": "Cảm ơn", "en": "Thank you.", "zh": "谢谢。", "pt": "Obrigado.", "ruby": "カム オン"}, {"id": 118, "mode": "指導", "category": "終了・質問", "jp": "さようなら", "vi": "Tạm biệt", "en": "Goodbye.", "zh": "再见。", "pt": "Até logo.", "ruby": "タム ビエット"}, {"id": 119, "mode": "冬道", "category": "富山・冬道", "jp": "雪道です", "vi": "Đường có tuyết", "en": "This is a snowy road.", "zh": "这是雪路。", "pt": "A estrada está com neve.", "ruby": "ドゥオン コー トゥエット"}, {"id": 120, "mode": "冬道", "category": "富山・冬道", "jp": "路面が凍っています", "vi": "Đường bị đóng băng", "en": "The road surface is frozen.", "zh": "路面结冰了。", "pt": "A pista está congelada.", "ruby": "ドゥオン ビー ドン バン"}, {"id": 121, "mode": "冬道", "category": "富山・冬道", "jp": "滑りやすいです", "vi": "Đường trơn", "en": "The road is slippery.", "zh": "路面很滑。", "pt": "A pista está escorregadia.", "ruby": "ドゥオン チョン"}, {"id": 122, "mode": "冬道", "category": "富山・冬道", "jp": "車間距離を多めに取ってください", "vi": "Giữ khoảng cách xa hơn", "en": "Please keep a longer distance.", "zh": "请保持更大的车距。", "pt": "Por favor, mantenha uma distância maior.", "ruby": "ズー クアン カック サー ホン"}, {"id": 123, "mode": "冬道", "category": "富山・冬道", "jp": "急ブレーキをしないでください", "vi": "Đừng phanh gấp", "en": "Do not brake suddenly.", "zh": "不要急刹车。", "pt": "Não freie bruscamente.", "ruby": "ドゥン ファン ガップ"}, {"id": 124, "mode": "冬道", "category": "富山・冬道", "jp": "急ハンドルをしないでください", "vi": "Đừng đánh lái gấp", "en": "Do not steer suddenly.", "zh": "不要急打方向。", "pt": "Não vire o volante bruscamente.", "ruby": "ドゥン ダイン ライ ガップ"}, {"id": 125, "mode": "冬道", "category": "富山・冬道", "jp": "雪で見えにくいです", "vi": "Tuyết làm khó nhìn", "en": "Snow makes it hard to see.", "zh": "下雪导致视线不好。", "pt": "A neve dificulta a visibilidade.", "ruby": "トゥエット ラム コー ニン"}, {"id": 126, "mode": "冬道", "category": "富山・冬道", "jp": "除雪車に注意してください", "vi": "Chú ý xe dọn tuyết", "en": "Watch out for snowplows.", "zh": "请注意除雪车。", "pt": "Cuidado com o caminhão limpa-neve.", "ruby": "チュー イ セー ゾン トゥエット"}, {"id": 127, "mode": "冬道", "category": "富山・冬道", "jp": "凍結に注意してください", "vi": "Chú ý đường đóng băng", "en": "Watch out for ice.", "zh": "请注意结冰。", "pt": "Cuidado com o gelo na pista.", "ruby": "チュー イ ドゥオン ドン バン"}, {"id": 128, "mode": "冬道", "category": "富山・実践", "jp": "トンネルです", "vi": "Đường hầm", "en": "This is a tunnel.", "zh": "这是隧道。", "pt": "Este é um túnel.", "ruby": "ドゥオン ハム"}, {"id": 129, "mode": "冬道", "category": "富山・実践", "jp": "ライトを点けてください", "vi": "Bật đèn lên", "en": "Please turn on the lights.", "zh": "请打开车灯。", "pt": "Por favor, acenda os faróis.", "ruby": "バット デン レン"}, {"id": 130, "mode": "冬道", "category": "富山・実践", "jp": "狭い道です", "vi": "Đường hẹp", "en": "This is a narrow road.", "zh": "这是狭窄道路。", "pt": "Esta é uma rua estreita.", "ruby": "ドゥオン ヘップ"}, {"id": 131, "mode": "冬道", "category": "富山・実践", "jp": "海沿いの道です", "vi": "Đường ven biển", "en": "This is a coastal road.", "zh": "这是海边道路。", "pt": "Esta é uma estrada à beira-mar.", "ruby": "ドゥオン ヴェン ビエン"}, {"id": 132, "mode": "冬道", "category": "富山・実践", "jp": "強風に注意してください", "vi": "Chú ý gió mạnh", "en": "Watch out for strong winds.", "zh": "请注意强风。", "pt": "Cuidado com o vento forte.", "ruby": "チュー イ ゾー マイン"}, {"id": 133, "mode": "冬道", "category": "富山・実践", "jp": "山道です", "vi": "Đường núi", "en": "This is a mountain road.", "zh": "这是山路。", "pt": "Esta é uma estrada de montanha.", "ruby": "ドゥオン ヌイ"}, {"id": 134, "mode": "冬道", "category": "富山・実践", "jp": "坂が多い道です", "vi": "Đường có nhiều dốc", "en": "This road has many slopes.", "zh": "这条路坡道很多。", "pt": "Esta estrada tem muitas ladeiras.", "ruby": "ドゥオン コー ニエウ ゾック"}, {"id": 135, "mode": "冬道", "category": "富山・実践", "jp": "見通しが悪いです", "vi": "Tầm nhìn kém", "en": "Visibility is poor.", "zh": "视线不好。", "pt": "A visibilidade está ruim.", "ruby": "タム ニン ケム"}, {"id": 136, "mode": "冬道", "category": "富山・実践", "jp": "歩道の雪に注意してください", "vi": "Chú ý tuyết trên vỉa hè", "en": "Watch out for snow on the sidewalk.", "zh": "请注意人行道上的雪。", "pt": "Cuidado com a neve na calçada.", "ruby": "チュー イ トゥエット チェン ヴィア ヘー"}, {"id": 137, "mode": "冬道", "category": "富山・実践", "jp": "水たまりに注意してください", "vi": "Chú ý vũng nước", "en": "Watch out for puddles.", "zh": "请注意积水。", "pt": "Cuidado com poças d'água.", "ruby": "チュー イ ヴン ヌオック"}, {"id": 138, "mode": "検定", "category": "検定結果・再受検", "jp": "合格です", "vi": "Bạn đã đậu", "en": "You passed.", "zh": "你合格了。", "pt": "Você passou.", "ruby": "バン ダー ダウ"}, {"id": 139, "mode": "検定", "category": "検定結果・再受検", "jp": "おめでとうございます", "vi": "Chúc mừng", "en": "Congratulations.", "zh": "恭喜你。", "pt": "Parabéns.", "ruby": "チュック ムン"}, {"id": 140, "mode": "検定", "category": "検定結果・再受検", "jp": "修了検定に合格しました", "vi": "Bạn đã đậu kỳ thi kết thúc giai đoạn 1", "en": "You passed the first-stage completion test.", "zh": "你通过了阶段结束考试。", "pt": "Você passou no exame de conclusão da primeira etapa.", "ruby": "バン ダー ダウ キー ティー ケット トゥック ザイ ドアン モッ"}, {"id": 141, "mode": "検定", "category": "検定結果・再受検", "jp": "卒業検定に合格しました", "vi": "Bạn đã đậu kỳ thi tốt nghiệp", "en": "You passed the graduation test.", "zh": "你通过了毕业考试。", "pt": "Você passou no exame final.", "ruby": "バン ダー ダウ キー ティー トット ギエップ"}, {"id": 142, "mode": "検定", "category": "検定結果・再受検", "jp": "残念ですが不合格です", "vi": "Rất tiếc, bạn chưa đậu", "en": "Unfortunately, you did not pass.", "zh": "很遗憾，你没有合格。", "pt": "Infelizmente, você não passou.", "ruby": "ザット ティエック バン チュア ダウ"}, {"id": 143, "mode": "検定", "category": "検定結果・再受検", "jp": "今回は合格できませんでした", "vi": "Lần này bạn chưa đậu", "en": "You did not pass this time.", "zh": "这次没有合格。", "pt": "Desta vez, você não passou.", "ruby": "ラン ナイ バン チュア ダウ"}, {"id": 144, "mode": "検定", "category": "検定結果・再受検", "jp": "もう一度受検できます", "vi": "Bạn có thể thi lại", "en": "You can take the test again.", "zh": "你可以再次参加考试。", "pt": "Você pode fazer o exame novamente.", "ruby": "バン コー テー ティー ライ"}, {"id": 145, "mode": "検定", "category": "検定結果・再受検", "jp": "再受検の予約をしてください", "vi": "Hãy đặt lịch thi lại", "en": "Please make a reservation for the retest.", "zh": "请预约再次考试。", "pt": "Por favor, marque o reexame.", "ruby": "ハイ ダット リック ティー ライ"}, {"id": 146, "mode": "検定", "category": "検定結果・再受検", "jp": "次回頑張りましょう", "vi": "Hãy cố gắng lần sau", "en": "Let's try again next time.", "zh": "下次加油。", "pt": "Vamos nos esforçar na próxima vez.", "ruby": "ハイ コー ガン ラン サウ"}, {"id": 147, "mode": "検定", "category": "検定結果・再受検", "jp": "苦手な部分を練習しましょう", "vi": "Hãy luyện tập phần còn yếu", "en": "Let's practice the weak areas.", "zh": "我们练习不擅长的部分吧。", "pt": "Vamos praticar os pontos fracos.", "ruby": "ハイ ルエン タップ ファン コン イエウ"}, {"id": 148, "mode": "検定", "category": "検定結果・再受検", "jp": "安全確認を重点的に練習しましょう", "vi": "Hãy luyện tập kỹ phần kiểm tra an toàn", "en": "Let's focus on practicing safety checks.", "zh": "我们重点练习安全确认。", "pt": "Vamos praticar principalmente a verificação de segurança.", "ruby": "ハイ ルエン タップ キー ファン キエム チャ アン トアン"}, {"id": 149, "mode": "検定", "category": "検定結果・再受検", "jp": "右左折をもう一度練習しましょう", "vi": "Hãy luyện tập lại rẽ phải và rẽ trái", "en": "Let's practice right and left turns again.", "zh": "我们再练习右转和左转。", "pt": "Vamos praticar novamente as conversões à direita e à esquerda.", "ruby": "ハイ ルエン タップ ライ レー ファーイ ヴァ レー チャーイ"}, {"id": 150, "mode": "検定", "category": "検定結果・再受検", "jp": "駐車をもう一度練習しましょう", "vi": "Hãy luyện tập lại đỗ xe", "en": "Let's practice parking again.", "zh": "我们再练习停车。", "pt": "Vamos praticar estacionamento novamente.", "ruby": "ハイ ルエン タップ ライ ドー セー"}, {"id": 151, "mode": "検定", "category": "検定結果・再受検", "jp": "必ず上達します", "vi": "Bạn chắc chắn sẽ tiến bộ", "en": "You will definitely improve.", "zh": "你一定会进步。", "pt": "Você com certeza vai melhorar.", "ruby": "バン チャック チャン セー ティエン ボ"}, {"id": 152, "mode": "検定", "category": "検定結果・再受検", "jp": "次の予約を確認しましょう", "vi": "Hãy kiểm tra lịch hẹn tiếp theo", "en": "Let's check the next reservation.", "zh": "我们确认下一次预约吧。", "pt": "Vamos verificar a próxima reserva.", "ruby": "ハイ キエム チャ リック ヘン ティエップ テオ"}, {"id": 153, "mode": "緊急", "category": "緊急", "jp": "ブレーキ！", "vi": "Phanh!", "en": "Brake!", "zh": "刹车！", "pt": "Freie!", "ruby": "ファン"}, {"id": 154, "mode": "緊急", "category": "緊急", "jp": "危険！", "vi": "Nguy hiểm!", "en": "Danger!", "zh": "危险！", "pt": "Perigo!", "ruby": "グイ ヒエム"}, {"id": 155, "mode": "緊急", "category": "緊急", "jp": "止まって！", "vi": "Dừng lại!", "en": "Stop!", "zh": "停车！", "pt": "Pare!", "ruby": "ズン ライ"}, {"id": 156, "mode": "緊急", "category": "緊急", "jp": "左へ寄せて！", "vi": "Tấp sang trái!", "en": "Move to the left!", "zh": "靠左！", "pt": "Encoste à esquerda!", "ruby": "タップ サン チャーイ"}, {"id": 157, "mode": "緊急", "category": "緊急", "jp": "右へ寄せて！", "vi": "Tấp sang phải!", "en": "Move to the right!", "zh": "靠右！", "pt": "Encoste à direita!", "ruby": "タップ サン ファーイ"}, {"id": 158, "mode": "緊急", "category": "緊急", "jp": "ハンドルを戻して！", "vi": "Trả lái lại!", "en": "Straighten the steering wheel!", "zh": "回正方向盘！", "pt": "Endireite o volante!", "ruby": "チャー ライ ライ"}, {"id": 159, "mode": "質問", "category": "教習生質問", "jp": "わかりません", "vi": "Tôi không hiểu", "en": "I do not understand.", "zh": "我不明白。", "pt": "Eu não entendo.", "ruby": "トイ コン ヒエウ"}, {"id": 160, "mode": "質問", "category": "教習生質問", "jp": "もう一度お願いします", "vi": "Xin nói lại", "en": "Please say it again.", "zh": "请再说一遍。", "pt": "Por favor, fale novamente.", "ruby": "シン ノイ ライ"}, {"id": 161, "mode": "質問", "category": "教習生質問", "jp": "ゆっくり話してください", "vi": "Xin nói chậm hơn", "en": "Please speak more slowly.", "zh": "请说慢一点。", "pt": "Por favor, fale mais devagar.", "ruby": "シン ノイ チャム ホン"}, {"id": 162, "mode": "質問", "category": "教習生質問", "jp": "質問してもいいですか", "vi": "Tôi có thể hỏi không?", "en": "May I ask a question?", "zh": "我可以提问吗？", "pt": "Posso fazer uma pergunta?", "ruby": "トイ コー テー ホイ コン"}, {"id": 163, "mode": "質問", "category": "教習生質問", "jp": "これで合っていますか", "vi": "Tôi làm đúng không?", "en": "Am I doing this correctly?", "zh": "这样做对吗？", "pt": "Estou fazendo certo?", "ruby": "トイ ラム ドゥン コン"}, {"id": 164, "mode": "質問", "category": "教習生質問", "jp": "トイレに行きたいです", "vi": "Tôi muốn đi vệ sinh", "en": "I want to go to the restroom.", "zh": "我想去洗手间。", "pt": "Quero ir ao banheiro.", "ruby": "トイ ムオン ディ ヴェ シン"}, {"id": 165, "mode": "質問", "category": "教習生質問", "jp": "気分が悪いです", "vi": "Tôi thấy không khỏe", "en": "I feel sick.", "zh": "我身体不舒服。", "pt": "Estou me sentindo mal.", "ruby": "トイ タイ コン コエ"}];const LANGS={vi:{label:'ベトナム語',code:'vi-VN'},en:{label:'英語',code:'en-US'},zh:{label:'中国語',code:'zh-CN'},pt:{label:'ポルトガル語',code:'pt-BR'}};let custom=JSON.parse(localStorage.getItem('custom_phrases_ultimate_auto')||'[]'),edited=JSON.parse(localStorage.getItem('edited_phrases_ultimate_auto')||'{}'),favOrder=JSON.parse(localStorage.getItem('fav_order_ultimate_auto')||'[]'),hiddenPhraseIds=new Set(JSON.parse(localStorage.getItem('hidden_phrases_ultimate_auto')||'[]').map(Number)),voices=[],voice=null,mode='すべて',hiddenModes=new Set(),favs=new Set(JSON.parse(localStorage.getItem('favs_ultimate_auto')||'[]')),history=JSON.parse(localStorage.getItem('hist_ultimate_auto')||'[]');
+function checkStorageAvailable(){
+  try{
+    localStorage.setItem('__storage_test__','ok');
+    localStorage.removeItem('__storage_test__');
+    return true;
+  }catch(e){
+    return false;
+  }
+}
+function allPhrases(){return [...BASE,...custom].map((p,i)=>{const id=i+1;return {...p,...(edited[id]||{}),id:id};});}function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}function loadVoices(){if(!('speechSynthesis'in window))return;voices=speechSynthesis.getVoices();let cfg=LANGS[lang.value],p=cfg.code.split('-')[0].toLowerCase();voice=voices.find(v=>(v.lang||'').toLowerCase()===cfg.code.toLowerCase())||voices.find(v=>(v.lang||'').toLowerCase().startsWith(p))||null;status.textContent=voice?cfg.label+'音声：'+voice.name+' / '+voice.lang:cfg.label+'音声が見つかりません';}function speak(t,jp=''){if(!('speechSynthesis'in window))return;speechSynthesis.cancel();let cfg=LANGS[lang.value],u=new SpeechSynthesisUtterance(t);u.lang=cfg.code;if(voice)u.voice=voice;u.rate=parseFloat(rate.value);speechSynthesis.speak(u);addHistory(jp,t,cfg.label);}function addHistory(jp,t,label){if(!jp)return;history.unshift({jp:jp,t:t,label:label,time:new Date().toLocaleTimeString()});history=history.slice(0,30);localStorage.setItem('hist_ultimate_auto',JSON.stringify(history));}function stopVoice(){if('speechSynthesis'in window)speechSynthesis.cancel();}function okMode(p){if(mode==='すべて'&&hiddenModes.has(p.mode))return false;return mode==='すべて'||(mode==='お気に入り'?favs.has(p.id):p.mode===mode);}function render(){document.body.classList.toggle('allmode',mode==='すべて');document.body.classList.toggle('favMode',mode==='お気に入り');document.body.classList.toggle('favMode',mode==='お気に入り');let l=lang.value,c=cat.value,query=q.value.trim().toLowerCase();let arr=allPhrases().filter(p=>okMode(p)&&(c==='すべて'||p.category===c)&&(!query||(p.jp+' '+p[l]+' '+p.ruby+' '+p.category).toLowerCase().includes(query)));count.textContent='表示：'+arr.length+'件 / 全'+allPhrases().length+'件（登録 '+custom.length+'件）';arr=arr.filter(p=>!hiddenPhraseIds.has(Number(p.id)));arr=sortFavorites(arr);arr=arr.filter(p=>!hiddenPhraseIds.has(Number(p.id)));arr=sortFavoritesRestored(arr);let h='',last='';for(let p of arr){if(p.category!==last&&mode!=='お気に入り'){last=p.category;h+='<div class="cat">'+esc(last)+'</div>';}let rr=getRubyForLang(p,l);let ruby=rr?'<div class="ruby">'+esc(rr)+'</div>':'';let em=p.mode==='緊急'?' emergency':'';h+=`<div class="card${em} ${p.custom?'custom':''}" data-id="${p.id}" draggable="${mode==='お気に入り'}" data-text="${esc(p[l])}" data-jp="${esc(p.jp)}"><button class="fav" onclick="fav(event,${p.id})">${favs.has(p.id)?'★':'☆'}</button><div class="speak"><div class="jp">${esc(p.jp)}</div><div class="badge">${p.custom?'登録 / ':''}${edited[p.id]?'編集済 / ':''}${esc(LANGS[l].label)} / No.${p.id} / ${esc(p.category)}</div><div class="target">🔊 ${esc(p[l])}</div>${ruby}</div><div class="cardActions"><button class="hidebtn adminOnly" onclick="hidePhrase(event,${p.id})">非表示</button><button class="editbtn adminOnly" onclick="openEditPhrase(event,${p.id})">編集</button>${edited[p.id]?`<button class="movebtn adminOnly" onclick="resetEditPhrase(event,${p.id})">元に戻す</button>`:''}</div>${p.custom?`<button class="del adminOnly" onclick="deleteCustom(event,'${esc(p.jp)}')">この登録フレーズを削除</button>`:''}</div>`;}list.innerHTML=h||'<p>該当なし</p>';document.querySelectorAll('.speak').forEach(x=>x.onclick=()=>{let c=x.closest('.card');speak(c.dataset.text,c.dataset.jp)});initFavoriteDrag();if(typeof initFavoriteReorderRestored==='function')initFavoriteReorderRestored();}function fav(e,id){
+  e.stopPropagation();
+  id=Number(id);
+  if(favs.has(id)){
+    favs.delete(id);
+    favOrder=favOrder.map(Number).filter(x=>x!==id);
+  }else{
+    favs.add(id);
+    if(!favOrder.map(Number).includes(id))favOrder.push(id);
+  }
+  localStorage.setItem('favs_ultimate_auto',JSON.stringify([...favs]));
+  localStorage.setItem('fav_order_ultimate_auto',JSON.stringify(favOrder));
+  render();
+}
+function playFirst(){let b=document.querySelector('.card');if(b)speak(b.dataset.text,b.dataset.jp);}function focusSearch(){q.focus();status.textContent='検索欄を開きました。キーボードのマイクで入力してください。';}function toggleHistory(){historyPanel.classList.toggle('show');historyPanel.innerHTML='<b>再生履歴</b>'+ (history.length?history.map(x=>`<div class="historyItem">${esc(x.time)} / ${esc(x.label)}<br>${esc(x.jp)} → ${esc(x.t)}</div>`).join(''):'<p>履歴はまだありません。</p>');}
+
+function sortFavorites(arr){
+  if(mode!=='お気に入り')return arr;
+  const order=favOrder.map(Number);
+  return arr.slice().sort((a,b)=>{
+    let ia=order.indexOf(Number(a.id)), ib=order.indexOf(Number(b.id));
+    if(ia<0)ia=99999+a.id;
+    if(ib<0)ib=99999+b.id;
+    return ia-ib;
+  });
+}
+function moveFav(e,id,dir){
+  e.stopPropagation();
+  id=Number(id);
+  let order=favOrder.map(Number);
+  if(!order.includes(id))order.push(id);
+  let i=order.indexOf(id), j=i+dir;
+  if(j<0||j>=order.length)return;
+  [order[i],order[j]]=[order[j],order[i]];
+  favOrder=order;
+  localStorage.setItem('fav_order_ultimate_auto',JSON.stringify(favOrder));
+  render();
+}
+function openEditPhrase(e,id){
+  e.stopPropagation();
+  const p=allPhrases().find(x=>Number(x.id)===Number(id));
+  if(!p)return;
+  editId.value=p.id;
+  editMode.value=p.mode||'教習';
+  editCat.value=p.category||'';
+  editJp.value=p.jp||'';
+  editVi.value=p.vi||'';
+  editRuby.value=p.ruby||'';
+  editEn.value=p.en||'';
+  editZh.value=p.zh||'';
+  editPt.value=p.pt||'';
+  editPanel.classList.add('show');
+  document.body.classList.add('editing');
+  addPanel.classList.remove('show');
+  if(typeof setMenuHiddenState==='function'){setMenuHiddenState(false);}
+}
+function saveEditPhrase(){
+  const id=Number(editId.value);
+  if(!id)return alert('編集対象がありません');
+  edited[id]={mode:editMode.value,category:editCat.value.trim()||editMode.value,jp:editJp.value.trim(),vi:editVi.value.trim(),ruby:editRuby.value.trim(),en:editEn.value.trim(),zh:editZh.value.trim(),pt:editPt.value.trim()};
+  localStorage.setItem('edited_phrases_ultimate_auto',JSON.stringify(edited));
+  refreshCategories();
+  render();
+  alert('編集を保存しました');
+  closeEditPanel();
+}
+function closeEditPanel(){editPanel.classList.remove('show');document.body.classList.remove('editing');}
+function resetEditPhrase(e,id){
+  e.stopPropagation();
+  if(!confirm('このフレーズの編集内容を元に戻しますか？'))return;
+  delete edited[Number(id)];
+  localStorage.setItem('edited_phrases_ultimate_auto',JSON.stringify(edited));
+  refreshCategories();
+  render();
+}
+function toggleAdd(){addPanel.classList.toggle('show');}
+async function translateOne(text,target){
+  const url='https://translate.googleapis.com/translate_a/single?client=gtx&sl=ja&tl='+encodeURIComponent(target)+'&dt=t&q='+encodeURIComponent(text);
+  const res=await fetch(url);
+  if(!res.ok) throw new Error('translate failed');
+  const data=await res.json();
+  return data[0].map(x=>x[0]).join('');
+}
+async function autoTranslate(){
+  const jp=newJp.value.trim();
+  if(!jp) return alert('日本語を入力してください');
+  addPanel.classList.add('loading');
+  status.textContent='自動翻訳中...';
+  try{
+    const [vi,en,zh,pt]=await Promise.all([translateOne(jp,'vi'),translateOne(jp,'en'),translateOne(jp,'zh-CN'),translateOne(jp,'pt')]);
+    newVi.value=vi;newEn.value=en;newZh.value=zh;newPt.value=pt;
+    status.textContent='翻訳しました。内容を確認して登録してください。';
+  }catch(e){
+    status.textContent='自動翻訳に失敗しました。';
+    alert('自動翻訳に失敗しました。日本語を仮入力するか、手動で入力してください。');
+  }finally{addPanel.classList.remove('loading');}
+}
+function copyFromJapanese(){
+  let jp=newJp.value.trim();
+  if(!jp)return alert('日本語を入力してください');
+  newVi.value=jp;newEn.value=jp;newZh.value=jp;newPt.value=jp;
+}
+function addPhrase(){
+  let jp=newJp.value.trim();
+  if(!jp)return alert('日本語を入力してください');
+  let p={custom:true,mode:newMode.value,category:newCat.value.trim()||newMode.value,jp,vi:newVi.value.trim()||jp,ruby:newRuby.value.trim(),en:newEn.value.trim()||jp,zh:newZh.value.trim()||jp,pt:newPt.value.trim()||jp};
+  custom.push(p);
+  localStorage.setItem('custom_phrases_ultimate_auto',JSON.stringify(custom));
+  [newJp,newVi,newRuby,newEn,newZh,newPt].forEach(x=>x.value='');
+  refreshCategories();
+  render();
+  alert('登録しました');
+}
+function deleteCustom(e,jp){
+  e.stopPropagation();
+  if(!confirm('この登録フレーズを削除しますか？'))return;
+  custom=custom.filter(p=>p.jp!==jp);
+  localStorage.setItem('custom_phrases_ultimate_auto',JSON.stringify(custom));
+  refreshCategories();
+  render();
+}
+function clearCustom(){
+  if(!confirm('登録したフレーズをすべて削除しますか？'))return;
+  custom=[];
+  localStorage.setItem('custom_phrases_ultimate_auto','[]');
+  refreshCategories();
+  render();
+}
+function refreshCategories(){
+  let current=cat.value||'すべて';
+  cat.innerHTML=['すべて',...new Set(allPhrases().map(p=>p.category))].map(x=>`<option ${x===current?'selected':''}>${esc(x)}</option>`).join('');
+}
+refreshCategories();document.querySelectorAll('.modes button').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('.modes button').forEach(x=>x.classList.toggle('active',x===b));q.value='';render();});document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{let m=b.dataset.filter;if(hiddenModes.has(m)){hiddenModes.delete(m);b.classList.remove('off');b.textContent=m+' ON';}else{hiddenModes.add(m);b.classList.add('off');b.textContent=m+' OFF';}render();});q.oninput=render;q.addEventListener('keydown',e=>{if(e.key==='Enter'){q.blur();}});cat.onchange=render;lang.onchange=()=>{loadVoices();render();};render();if(!checkStorageAvailable()){status.textContent='保存機能が使えない状態です。Chromeの通常モードで開いてください。';}loadVoices();if('speechSynthesis'in window)speechSynthesis.onvoiceschanged=loadVoices;
+
+/* menu two-swipe show patch */
+let menuLastScrollY = window.scrollY;
+let menuHidden = false;
+let touchStartYForMenu = 0;
+let pullDownSwipeCount = 0;
+let lastPullDownSwipeTime = 0;
+
+function setMenuHiddenState(hidden){
+  const hd = document.querySelector('header');
+  const tb = document.querySelector('.toolbar');
+  if(!hd || !tb) return;
+  hd.classList.toggle('hide', hidden);
+  tb.classList.toggle('hide', hidden);
+  menuHidden = hidden;
+  if(hidden){
+    pullDownSwipeCount = 0;
+  }
+}
+
+// スクロール中は「隠す」だけ。戻しスクロールで勝手に表示しない。
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+
+  if((typeof addPanel !== 'undefined' && addPanel.classList.contains('show')) || ((typeof editPanel !== 'undefined' && editPanel.classList.contains('show')) || (typeof backupPanel !== 'undefined' && backupPanel.classList.contains('show')))){
+    menuLastScrollY = y;
+    return;
+  }
+
+  // 一番上まで戻った時だけ自動表示
+  if(y < 30){
+    setMenuHiddenState(false);
+    pullDownSwipeCount = 0;
+    menuLastScrollY = y;
+    return;
+  }
+
+  // ページ下方向へ進む時は隠す
+  if(y > menuLastScrollY + 12 && y > 100){
+    setMenuHiddenState(true);
+  }
+
+  menuLastScrollY = y;
+}, {passive:true});
+
+// スマホ用：指を下へ動かして離した動作を1回として数える
+window.addEventListener('touchstart', (e) => {
+  if(e.touches && e.touches.length){
+    touchStartYForMenu = e.touches[0].clientY;
+  }
+}, {passive:true});
+
+window.addEventListener('touchend', (e) => {
+  if(!menuHidden) return;
+  if((typeof addPanel !== 'undefined' && addPanel.classList.contains('show')) || ((typeof editPanel !== 'undefined' && editPanel.classList.contains('show')) || (typeof backupPanel !== 'undefined' && backupPanel.classList.contains('show')))) return;
+  if(window.scrollY < 30) return;
+
+  const endY = (e.changedTouches && e.changedTouches.length) ? e.changedTouches[0].clientY : touchStartYForMenu;
+  const diff = endY - touchStartYForMenu;
+
+  // 指を下へ大きめにスワイプした時だけカウント
+  if(diff > 55){
+    const now = Date.now();
+    if(now - lastPullDownSwipeTime < 1600){
+      pullDownSwipeCount += 1;
+    }else{
+      pullDownSwipeCount = 1;
+    }
+    lastPullDownSwipeTime = now;
+
+    if(pullDownSwipeCount >= 2){
+      setMenuHiddenState(false);
+      pullDownSwipeCount = 0;
+    }
+  }
+}, {passive:true});
+
+// パソコン用：マウスホイール上方向を2回で表示
+window.addEventListener('wheel', (e) => {
+  if(!menuHidden) return;
+  if((typeof addPanel !== 'undefined' && addPanel.classList.contains('show')) || ((typeof editPanel !== 'undefined' && editPanel.classList.contains('show')) || (typeof backupPanel !== 'undefined' && backupPanel.classList.contains('show')))) return;
+  if(window.scrollY < 30) return;
+
+  if(e.deltaY < -20){
+    const now = Date.now();
+    if(now - lastPullDownSwipeTime < 1600){
+      pullDownSwipeCount += 1;
+    }else{
+      pullDownSwipeCount = 1;
+    }
+    lastPullDownSwipeTime = now;
+
+    if(pullDownSwipeCount >= 2){
+      setMenuHiddenState(false);
+      pullDownSwipeCount = 0;
+    }
+  }
+}, {passive:true});
+
+/* admin edit mode patch */
+const ADMIN_PIN = '2525'; // 変更したい場合はこの数字を変えてください
+let titleTapCount = 0;
+let titleTapTimer = null;
+
+function enableAdminMode(){
+  document.body.classList.add('adminMode');
+  localStorage.setItem('admin_mode_enabled','1');
+  if(typeof status!=='undefined')status.textContent='編集モードを有効にしました。';
+  render();
+}
+function disableAdminMode(){
+  document.body.classList.remove('adminMode');
+  localStorage.removeItem('admin_mode_enabled');
+  if(typeof addPanel!=='undefined')addPanel.classList.remove('show');
+  if(typeof editPanel!=='undefined')editPanel.classList.remove('show');
+  document.body.classList.remove('editing');
+  if(typeof status!=='undefined')status.textContent='編集モードを終了しました。';
+  render();
+}
+function askAdminPin(){
+  const pin = prompt('編集モードの暗証番号を入力してください');
+  if(pin === ADMIN_PIN){
+    enableAdminMode();
+  }else if(pin !== null){
+    alert('暗証番号が違います');
+  }
+}
+if(localStorage.getItem('admin_mode_enabled')==='1'){
+  document.body.classList.add('adminMode');
+}
+const titleEl = document.getElementById('appTitle');
+if(titleEl){
+  titleEl.addEventListener('click',()=>{
+    titleTapCount++;
+    clearTimeout(titleTapTimer);
+    titleTapTimer=setTimeout(()=>{titleTapCount=0;},1300);
+    if(titleTapCount>=5){
+      titleTapCount=0;
+      askAdminPin();
+    }
+  });
+}
+
+/* backup restore patch */
+function toggleBackup(){
+  backupPanel.classList.toggle('show');
+  if(typeof addPanel!=='undefined')addPanel.classList.remove('show');
+  if(typeof editPanel!=='undefined')editPanel.classList.remove('show');
+}
+function getBackupData(){
+  return {
+    app:"toyama_driving_multilang",
+    version:"backup_restore_v1",
+    createdAt:new Date().toISOString(),
+    custom:JSON.parse(localStorage.getItem('custom_phrases_ultimate_auto')||'[]'),
+    edited:JSON.parse(localStorage.getItem('edited_phrases_ultimate_auto')||'{}'),
+    favs:JSON.parse(localStorage.getItem('favs_ultimate_auto')||'[]'),
+    favOrder:JSON.parse(localStorage.getItem('fav_order_ultimate_auto')||'[]'),
+    history:JSON.parse(localStorage.getItem('hist_ultimate_auto')||'[]')
+  };
+}
+function exportBackup(){
+  const data=getBackupData();
+  backupText.value=JSON.stringify(data,null,2);
+  if(typeof status!=='undefined')status.textContent='バックアップを作成しました。コピーまたはファイル保存してください。';
+}
+async function copyBackupText(){
+  if(!backupText.value)exportBackup();
+  try{
+    await navigator.clipboard.writeText(backupText.value);
+    alert('バックアップデータをコピーしました');
+  }catch(e){
+    backupText.select();
+    alert('コピーできない場合は、表示された文字を手動でコピーしてください');
+  }
+}
+function downloadBackupFile(){
+  if(!backupText.value)exportBackup();
+  const blob=new Blob([backupText.value],{type:'application/json'});
+  const a=document.createElement('a');
+  const d=new Date();
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,'0');
+  const day=String(d.getDate()).padStart(2,'0');
+  a.href=URL.createObjectURL(blob);
+  a.download='教習アプリ_バックアップ_'+y+m+day+'.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function importBackup(){
+  const txt=backupText.value.trim();
+  if(!txt)return alert('復元するバックアップデータを貼り付けてください');
+  let data;
+  try{
+    data=JSON.parse(txt);
+  }catch(e){
+    return alert('バックアップデータの形式が正しくありません');
+  }
+  if(!data || data.app!=='toyama_driving_multilang'){
+    if(!confirm('このアプリ用のバックアップか確認できません。復元しますか？'))return;
+  }
+  if(!confirm('現在の編集内容・お気に入り・登録フレーズをバックアップ内容で上書きします。よろしいですか？'))return;
+
+  localStorage.setItem('custom_phrases_ultimate_auto',JSON.stringify(data.custom||[]));
+  localStorage.setItem('edited_phrases_ultimate_auto',JSON.stringify(data.edited||{}));
+  localStorage.setItem('favs_ultimate_auto',JSON.stringify(data.favs||[]));
+  localStorage.setItem('fav_order_ultimate_auto',JSON.stringify(data.favOrder||[]));
+  localStorage.setItem('hist_ultimate_auto',JSON.stringify(data.history||[]));
+
+  custom=JSON.parse(localStorage.getItem('custom_phrases_ultimate_auto')||'[]');
+  edited=JSON.parse(localStorage.getItem('edited_phrases_ultimate_auto')||'{}');
+  favOrder=JSON.parse(localStorage.getItem('fav_order_ultimate_auto')||'[]');
+  favs=new Set(JSON.parse(localStorage.getItem('favs_ultimate_auto')||'[]'));
+  history=JSON.parse(localStorage.getItem('hist_ultimate_auto')||'[]');
+
+  refreshCategories();
+  render();
+  alert('復元しました');
+}
+
+/* favorite drag and drop reorder patch */
+let draggedFavId = null;
+
+function saveFavOrderFromCards(){
+  const ids=[...document.querySelectorAll('.card[data-id]')].map(c=>Number(c.dataset.id)).filter(id=>favs.has(id));
+  if(ids.length){
+    favOrder=ids;
+    localStorage.setItem('fav_order_ultimate_auto',JSON.stringify(favOrder));
+  }
+}
+
+function initFavoriteDrag(){
+  const cards=[...document.querySelectorAll('.card[data-id]')];
+  cards.forEach(card=>{
+    card.ondragstart=null;
+    card.ondragover=null;
+    card.ondragleave=null;
+    card.ondrop=null;
+    card.ondragend=null;
+  });
+  if(mode!=='お気に入り')return;
+
+  cards.forEach(card=>{
+    card.ondragstart=(e)=>{
+      draggedFavId=Number(card.dataset.id);
+      card.classList.add('dragging');
+      if(e.dataTransfer){
+        e.dataTransfer.effectAllowed='move';
+        try{e.dataTransfer.setData('text/plain',String(draggedFavId));}catch(_){}
+      }
+    };
+    card.ondragover=(e)=>{
+      e.preventDefault();
+      if(Number(card.dataset.id)!==draggedFavId)card.classList.add('dropTarget');
+    };
+    card.ondragleave=()=>card.classList.remove('dropTarget');
+    card.ondrop=(e)=>{
+      e.preventDefault();
+      const targetId=Number(card.dataset.id);
+      document.querySelectorAll('.dropTarget').forEach(x=>x.classList.remove('dropTarget'));
+      if(!draggedFavId || draggedFavId===targetId)return;
+      let order=favOrder.map(Number);
+      if(!order.includes(draggedFavId))order.push(draggedFavId);
+      if(!order.includes(targetId))order.push(targetId);
+      order=order.filter(id=>id!==draggedFavId);
+      const idx=order.indexOf(targetId);
+      order.splice(idx,0,draggedFavId);
+      favOrder=order;
+      localStorage.setItem('fav_order_ultimate_auto',JSON.stringify(favOrder));
+      render();
+    };
+    card.ondragend=()=>{
+      draggedFavId=null;
+      document.querySelectorAll('.dragging,.dropTarget').forEach(x=>x.classList.remove('dragging','dropTarget'));
+    };
+  });
+
+  // スマホ用：☰ 長押し移動を押して動かす
+  cards.forEach(card=>{
+    const handle=card.querySelector('.dragHandle');
+    if(!handle)return;
+    let touchCard=null;
+    let startY=0;
+    let longPressTimer=null;
+    let dragging=false;
+
+    handle.ontouchstart=(e)=>{
+      touchCard=card;
+      startY=e.touches[0].clientY;
+      dragging=false;
+      longPressTimer=setTimeout(()=>{
+        dragging=true;
+        draggedFavId=Number(card.dataset.id);
+        card.classList.add('dragging');
+        if(navigator.vibrate)navigator.vibrate(30);
+      },250);
+    };
+
+    handle.ontouchmove=(e)=>{
+      if(!touchCard)return;
+      const y=e.touches[0].clientY;
+      if(!dragging && Math.abs(y-startY)>12){
+        clearTimeout(longPressTimer);
+        return;
+      }
+      if(!dragging)return;
+      e.preventDefault();
+      const el=document.elementFromPoint(e.touches[0].clientX,y);
+      const target=el ? el.closest('.card[data-id]') : null;
+      if(target && target!==touchCard){
+        const list=document.getElementById('list');
+        const rect=target.getBoundingClientRect();
+        if(y < rect.top + rect.height/2){
+          list.insertBefore(touchCard,target);
+        }else{
+          list.insertBefore(touchCard,target.nextSibling);
+        }
+      }
+    };
+
+    handle.ontouchend=()=>{
+      clearTimeout(longPressTimer);
+      if(dragging){
+        saveFavOrderFromCards();
+        render();
+      }
+      if(touchCard)touchCard.classList.remove('dragging');
+      touchCard=null;
+      dragging=false;
+      draggedFavId=null;
+    };
+  });
+}
+
+/* favorite full-card touch drag patch */
+function enableFullCardFavoriteDrag(){
+  if(mode!=='お気に入り')return;
+  const cards=[...document.querySelectorAll('.card[data-id]')];
+  cards.forEach(card=>{
+    let touchCard=null;
+    let startY=0;
+    let longPressTimer=null;
+    let dragging=false;
+
+    card.addEventListener('touchstart',(e)=>{
+      if(e.target.closest('button'))return;
+      touchCard=card;
+      startY=e.touches[0].clientY;
+      dragging=false;
+      longPressTimer=setTimeout(()=>{
+        dragging=true;
+        draggedFavId=Number(card.dataset.id);
+        card.classList.add('dragging');
+        if(navigator.vibrate)navigator.vibrate(30);
+      },450);
+    },{passive:true});
+
+    card.addEventListener('touchmove',(e)=>{
+      if(!touchCard)return;
+      const y=e.touches[0].clientY;
+      if(!dragging && Math.abs(y-startY)>8){
+        clearTimeout(longPressTimer);
+        return;
+      }
+      if(!dragging)return;
+      e.preventDefault();
+      const el=document.elementFromPoint(e.touches[0].clientX,y);
+      const target=el ? el.closest('.card[data-id]') : null;
+      if(target && target!==touchCard){
+        const list=document.getElementById('list');
+        const rect=target.getBoundingClientRect();
+        if(y < rect.top + rect.height/2){
+          list.insertBefore(touchCard,target);
+        }else{
+          list.insertBefore(touchCard,target.nextSibling);
+        }
+      }
+    },{passive:false});
+
+    card.addEventListener('touchend',()=>{
+      clearTimeout(longPressTimer);
+      if(dragging){
+        saveFavOrderFromCards();
+        render();
+      }
+      if(touchCard)touchCard.classList.remove('dragging');
+      touchCard=null;
+      dragging=false;
+      draggedFavId=null;
+    },{passive:true});
+  });
+}
+
+/* hide/show phrase patch */
+function saveHiddenPhrases(){
+  localStorage.setItem('hidden_phrases_ultimate_auto',JSON.stringify([...hiddenPhraseIds].map(Number)));
+}
+function hidePhrase(e,id){
+  e.stopPropagation();
+  id=Number(id);
+  const p=allPhrases().find(x=>Number(x.id)===id);
+  if(!p)return;
+  if(!confirm('このフレーズを非表示にしますか？\n\n'+p.jp))return;
+  hiddenPhraseIds.add(id);
+  saveHiddenPhrases();
+  render();
+  renderHiddenList();
+}
+function showPhrase(id){
+  hiddenPhraseIds.delete(Number(id));
+  saveHiddenPhrases();
+  render();
+  renderHiddenList();
+}
+function showAllHiddenPhrases(){
+  if(!confirm('非表示フレーズをすべて再表示しますか？'))return;
+  hiddenPhraseIds.clear();
+  saveHiddenPhrases();
+  render();
+  renderHiddenList();
+}
+function toggleHiddenPanel(){
+  hiddenPanel.classList.toggle('show');
+  if(typeof addPanel!=='undefined')addPanel.classList.remove('show');
+  if(typeof editPanel!=='undefined')editPanel.classList.remove('show');
+  if(typeof backupPanel!=='undefined')backupPanel.classList.remove('show');
+  renderHiddenList();
+}
+function renderHiddenList(){
+  if(typeof hiddenList==='undefined')return;
+  const arr=allPhrases().filter(p=>hiddenPhraseIds.has(Number(p.id)));
+  if(!arr.length){
+    hiddenList.innerHTML='<p class="small">非表示フレーズはありません。</p>';
+    return;
+  }
+  hiddenList.innerHTML='<button class="formbtn warn" onclick="showAllHiddenPhrases()">すべて再表示</button>' + arr.map(p=>`<div class="hiddenListItem"><span class="hiddenBadge">No.${p.id}</span> ${esc(p.jp)}<br><span class="small">${esc(p.category)} / ${esc(p.mode)}</span><br><button class="formbtn" onclick="showPhrase(${p.id})">再表示</button></div>`).join('');
+}
+
+/* stable edit button patch */
+function openEditPhrase(e,id){
+  if(e)e.stopPropagation();
+  id=Number(id);
+  const p=allPhrases().find(x=>Number(x.id)===id);
+  if(!p){alert('編集対象が見つかりません');return;}
+  editId.value=p.id;
+  editMode.value=p.mode||'教習';
+  editCat.value=p.category||'';
+  editJp.value=p.jp||'';
+  editVi.value=p.vi||'';
+  editRuby.value=p.ruby||'';
+  editEn.value=p.en||'';
+  editZh.value=p.zh||'';
+  editPt.value=p.pt||'';
+  editPanel.classList.add('show');
+  document.body.classList.add('editing');
+  if(typeof addPanel!=='undefined')addPanel.classList.remove('show');
+  if(typeof hiddenPanel!=='undefined')hiddenPanel.classList.remove('show');
+}
+function saveEditPhrase(){
+  const id=Number(editId.value);
+  if(!id)return alert('編集対象がありません');
+  edited[id]={mode:editMode.value,category:editCat.value.trim()||editMode.value,jp:editJp.value.trim(),vi:editVi.value.trim(),ruby:editRuby.value.trim(),en:editEn.value.trim(),zh:editZh.value.trim(),pt:editPt.value.trim()};
+  localStorage.setItem('edited_phrases_ultimate_auto',JSON.stringify(edited));
+  if(typeof refreshCategories==='function')refreshCategories();
+  render();
+  alert('編集を保存しました');
+  closeEditPanel();
+}
+function closeEditPanel(){
+  editPanel.classList.remove('show');
+  document.body.classList.remove('editing');
+}
+
+/* modal stable edit patch */
+function openEditPhrase(e,id){
+  if(e)e.stopPropagation();
+  id=Number(id);
+  const p=allPhrases().find(x=>Number(x.id)===id);
+  if(!p){alert('編集対象が見つかりません');return;}
+
+  editId2.value=p.id;
+  editMode2.value=p.mode||'教習';
+  editCat2.value=p.category||'';
+  editJp2.value=p.jp||'';
+  editVi2.value=p.vi||'';
+  editRuby2.value=p.ruby||'';if(typeof editEnRuby2!=='undefined')editEnRuby2.value=p.enRuby||p.rubyEn||'';if(typeof editZhRuby2!=='undefined')editZhRuby2.value=p.zhRuby||p.rubyZh||'';if(typeof editPtRuby2!=='undefined')editPtRuby2.value=p.ptRuby||p.rubyPt||'';if(typeof editEnRuby2!=='undefined')editEnRuby2.value=p.enRuby||p.rubyEn||'';if(typeof editZhRuby2!=='undefined')editZhRuby2.value=p.zhRuby||p.rubyZh||'';if(typeof editPtRuby2!=='undefined')editPtRuby2.value=p.ptRuby||p.rubyPt||'';
+  editEn2.value=p.en||'';
+  editZh2.value=p.zh||'';
+  editPt2.value=p.pt||'';
+
+  if(typeof addPanel!=='undefined')addPanel.classList.remove('show');
+  if(typeof hiddenPanel!=='undefined')hiddenPanel.classList.remove('show');
+  if(typeof backupPanel!=='undefined')backupPanel.classList.remove('show');
+  if(typeof editPanel!=='undefined')editPanel.classList.remove('show');
+
+  editOverlay.classList.add('show');
+  document.body.classList.add('modalOpen');
+}
+function saveEditPhrase(){
+  const id=Number(editId2.value);
+  if(!id)return alert('編集対象がありません');
+  edited[id]={mode:editMode2.value,category:editCat2.value.trim()||editMode2.value,jp:editJp2.value.trim(),vi:editVi2.value.trim(),ruby:editRuby2.value.trim(),enRuby:(typeof editEnRuby2!=='undefined'?editEnRuby2.value.trim():''),zhRuby:(typeof editZhRuby2!=='undefined'?editZhRuby2.value.trim():''),ptRuby:(typeof editPtRuby2!=='undefined'?editPtRuby2.value.trim():''),en:editEn2.value.trim(),zh:editZh2.value.trim(),pt:editPt2.value.trim()};
+  localStorage.setItem('edited_phrases_ultimate_auto',JSON.stringify(edited));
+  if(typeof refreshCategories==='function')refreshCategories();
+  render();
+  closeEditPanel();
+  alert('編集を保存しました');
+}
+function closeEditPanel(){
+  if(typeof editOverlay!=='undefined')editOverlay.classList.remove('show');
+  if(typeof editPanel!=='undefined')editPanel.classList.remove('show');
+  document.body.classList.remove('modalOpen');
+  document.body.classList.remove('editing');
+}
+setTimeout(()=>{
+  if(typeof editOverlay!=='undefined'){
+    editOverlay.addEventListener('click',(e)=>{
+      if(e.target===editOverlay)closeEditPanel();
+    });
+  }
+},0);
+
+/* stable add phrase modal patch */
+function toggleAdd(){openAddModal();}
+function openAddModal(){
+  try{if(typeof editOverlay!=='undefined')editOverlay.classList.remove('show');}catch(_){}
+  try{if(typeof editPanel!=='undefined')editPanel.classList.remove('show');}catch(_){}
+  try{if(typeof hiddenPanel!=='undefined')hiddenPanel.classList.remove('show');}catch(_){}
+  try{if(typeof backupPanel!=='undefined')backupPanel.classList.remove('show');}catch(_){}
+  try{if(typeof addPanel!=='undefined')addPanel.classList.remove('show');}catch(_){}
+  addOverlay.classList.add('show');
+  document.body.classList.add('modalOpen');
+  setTimeout(()=>{try{newJp2.focus();}catch(_){}},120);
+}
+function closeAddModal(){
+  addOverlay.classList.remove('show');
+  document.body.classList.remove('modalOpen');
+}
+async function autoTranslateModal(){
+  let jp=newJp2.value.trim();
+  if(!jp)return alert('日本語を入力してください');
+  addOverlay.classList.add('loading');
+  try{
+    if(typeof translateOne !== 'function') throw new Error('translateOne not found');
+    let result=await Promise.all([translateOne(jp,'vi'),translateOne(jp,'en'),translateOne(jp,'zh-CN'),translateOne(jp,'pt')]);
+    newVi2.value=result[0];
+    newEn2.value=result[1];
+    newZh2.value=result[2];
+    newPt2.value=result[3];
+    if(typeof status!=='undefined')status.textContent='翻訳しました。内容を確認して登録してください。';
+    setTimeout(()=>{try{newVi2.scrollIntoView({behavior:'smooth',block:'center'});}catch(_){}},120);
+  }catch(e){
+    if(typeof status!=='undefined')status.textContent='自動翻訳に失敗しました。';
+    alert('自動翻訳に失敗しました。日本語を仮入力するか、手動で入力してください。');
+  }finally{
+    addOverlay.classList.remove('loading');
+  }
+}
+function copyFromJapaneseModal(){
+  let jp=newJp2.value.trim();
+  if(!jp)return alert('日本語を入力してください');
+  newVi2.value=jp;newEn2.value=jp;newZh2.value=jp;newPt2.value=jp;
+}
+function addPhraseModal(){
+  let jp=newJp2.value.trim();
+  if(!jp)return alert('日本語を入力してください');
+  let p={custom:true,mode:newMode2.value,category:newCat2.value.trim()||newMode2.value,jp:jp,vi:newVi2.value.trim()||jp,ruby:newRuby2.value.trim(),enRuby:(typeof newEnRuby2!=='undefined'?newEnRuby2.value.trim():''),zhRuby:(typeof newZhRuby2!=='undefined'?newZhRuby2.value.trim():''),ptRuby:(typeof newPtRuby2!=='undefined'?newPtRuby2.value.trim():''),en:newEn2.value.trim()||jp,zh:newZh2.value.trim()||jp,pt:newPt2.value.trim()||jp};
+  custom.push(p);
+  localStorage.setItem('custom_phrases_ultimate_auto',JSON.stringify(custom));
+  [newCat2,newJp2,newVi2,newRuby2,newEnRuby2,newZhRuby2,newPtRuby2,newEn2,newZh2,newPt2].forEach(x=>{if(x)x.value=''});
+  if(typeof refreshCategories==='function')refreshCategories();
+  render();
+  closeAddModal();
+  alert('登録しました');
+}
+setTimeout(()=>{try{addOverlay.addEventListener('click',e=>{if(e.target===addOverlay)closeAddModal();});}catch(_){}},0);
+
+/* simple copy protection */
+document.addEventListener('contextmenu', e => {
+  if(!e.target.closest('input,textarea')) e.preventDefault();
+});
+document.addEventListener('copy', e => {
+  if(!e.target.closest('input,textarea')) e.preventDefault();
+});
+document.addEventListener('cut', e => {
+  if(!e.target.closest('input,textarea')) e.preventDefault();
+});
+document.addEventListener('selectstart', e => {
+  if(!e.target.closest('input,textarea')) e.preventDefault();
+});
+document.addEventListener('dragstart', e => {
+  if(!e.target.closest('input,textarea')) e.preventDefault();
+});
+
+/* stable history / hidden panel modal patch */
+function openCommonPanel(title, htmlContent){
+  commonPanelTitle.textContent=title;
+  commonPanelContent.innerHTML=htmlContent;
+  try{if(typeof addOverlay!=='undefined')addOverlay.classList.remove('show');}catch(_){}
+  try{if(typeof editOverlay!=='undefined')editOverlay.classList.remove('show');}catch(_){}
+  try{if(typeof addPanel!=='undefined')addPanel.classList.remove('show');}catch(_){}
+  try{if(typeof editPanel!=='undefined')editPanel.classList.remove('show');}catch(_){}
+  try{if(typeof hiddenPanel!=='undefined')hiddenPanel.classList.remove('show');}catch(_){}
+  try{if(typeof historyPanel!=='undefined')historyPanel.classList.remove('show');}catch(_){}
+  commonPanelOverlay.classList.add('show');
+  document.body.classList.add('modalOpen');
+}
+function closeCommonPanel(){
+  commonPanelOverlay.classList.remove('show');
+  document.body.classList.remove('modalOpen');
+}
+function toggleHistory(){
+  const items=(history||[]).slice().reverse();
+  if(!items.length){
+    openCommonPanel('履歴','<p class="small">履歴はありません。</p>');
+    return;
+  }
+  const body=items.map(x=>`<div class="historyItem">${esc(x)}</div>`).join('');
+  openCommonPanel('履歴', body);
+}
+function toggleHiddenPanel(){
+  const arr=allPhrases().filter(p=>hiddenPhraseIds && hiddenPhraseIds.has(Number(p.id)));
+  if(!arr.length){
+    openCommonPanel('非表示フレーズ管理','<p class="small">非表示フレーズはありません。</p>');
+    return;
+  }
+  const body='<button class="formbtn warn" onclick="showAllHiddenPhrases();closeCommonPanel();">すべて再表示</button>' +
+    arr.map(p=>`<div class="hiddenListItem"><span class="hiddenBadge">No.${p.id}</span> ${esc(p.jp)}<br><span class="small">${esc(p.category)} / ${esc(p.mode)}</span><br><button class="formbtn" onclick="showPhrase(${p.id});toggleHiddenPanel();">再表示</button></div>`).join('');
+  openCommonPanel('非表示フレーズ管理', body);
+}
+setTimeout(()=>{
+  try{
+    commonPanelOverlay.addEventListener('click',(e)=>{
+      if(e.target===commonPanelOverlay)closeCommonPanel();
+    });
+  }catch(_){}
+},0);
+
+/* history object display fix */
+function historyText(x){
+  if(x == null) return '';
+  if(typeof x === 'string') return x;
+  if(typeof x === 'object'){
+    return x.jp || x.text || x.phrase || x.title || x.vi || JSON.stringify(x);
+  }
+  return String(x);
+}
+function toggleHistory(){
+  const items=(history||[]).slice().reverse();
+  if(!items.length){
+    openCommonPanel('履歴','<p class="small">履歴はありません。</p>');
+    return;
+  }
+  const body=items.map(x=>`<div class="historyItem">${esc(historyText(x))}</div>`).join('');
+  openCommonPanel('履歴', body);
+}
+
+/* history tap speak patch */
+function findPhraseFromHistoryItem(x){
+  const text=historyText(x);
+  if(!text)return null;
+  return allPhrases().find(p =>
+    p.jp===text || p.vi===text || p.en===text || p.zh===text || p.pt===text ||
+    (p.jp && text.includes(p.jp)) ||
+    (p.vi && text.includes(p.vi)) ||
+    (p.en && text.includes(p.en)) ||
+    (p.zh && text.includes(p.zh)) ||
+    (p.pt && text.includes(p.pt))
+  );
+}
+function speakHistory(indexFromNewest){
+  const items=(history||[]).slice().reverse();
+  const item=items[indexFromNewest];
+  const p=findPhraseFromHistoryItem(item);
+  if(!p){
+    alert('該当フレーズが見つかりません');
+    return;
+  }
+  const l=lang.value;
+  speak(p[l]||p.vi||p.jp,p.jp);
+}
+function toggleHistory(){
+  const items=(history||[]).slice().reverse();
+  if(!items.length){
+    openCommonPanel('履歴','<p class="small">履歴はありません。</p>');
+    return;
+  }
+  const body='<div class="historyHint">履歴をタップすると、現在選択中の言語で音声再生します。</div>' +
+    items.map((x,i)=>`<div class="historyItem" onclick="speakHistory(${i})">🔊 ${esc(historyText(x))}</div>`).join('');
+  openCommonPanel('履歴', body);
+}
+
+/* history delete patch */
+function deleteHistoryItem(indexFromNewest,e){
+  if(e)e.stopPropagation();
+  const originalIndex=(history||[]).length-1-indexFromNewest;
+  if(originalIndex<0)return;
+  if(!confirm('この履歴を削除しますか？'))return;
+  history.splice(originalIndex,1);
+  localStorage.setItem('hist_ultimate_auto',JSON.stringify(history));
+  toggleHistory();
+}
+function clearAllHistoryFromPanel(){
+  if(!confirm('履歴をすべて削除しますか？'))return;
+  history=[];
+  localStorage.setItem('hist_ultimate_auto',JSON.stringify(history));
+  toggleHistory();
+}
+function toggleHistory(){
+  const items=(history||[]).slice().reverse();
+  if(!items.length){
+    openCommonPanel('履歴','<p class="small">履歴はありません。</p>');
+    return;
+  }
+  const body='<div class="historyHint">履歴をタップすると、現在選択中の言語で音声再生します。</div>' +
+    '<button class="formbtn warn" onclick="clearAllHistoryFromPanel()">履歴をすべて削除</button>' +
+    items.map((x,i)=>`<div class="histRow"><div class="histText" onclick="speakHistory(${i})">🔊 ${esc(historyText(x))}</div><button class="histDeleteBtn" onclick="deleteHistoryItem(${i},event)">削除</button></div>`).join('');
+  openCommonPanel('履歴', body);
+}
+
+/* favorite reorder restored */
+function fav(e,id){
+  e.stopPropagation();
+  id=Number(id);
+  if(typeof favOrder==='undefined')favOrder=[];
+  if(favs.has(id)){
+    favs.delete(id);
+    favOrder=favOrder.map(Number).filter(x=>x!==id);
+  }else{
+    favs.add(id);
+    if(!favOrder.map(Number).includes(id))favOrder.push(id);
+  }
+  localStorage.setItem('favs_ultimate_auto',JSON.stringify([...favs]));
+  localStorage.setItem('fav_order_ultimate_auto',JSON.stringify(favOrder));
+  render();
+}
+function sortFavoritesRestored(arr){
+  if(mode!=='お気に入り')return arr;
+  if(typeof favOrder==='undefined')favOrder=[];
+  const order=favOrder.map(Number);
+  return arr.slice().sort((a,b)=>{
+    let ia=order.indexOf(Number(a.id)), ib=order.indexOf(Number(b.id));
+    if(ia<0)ia=99999+Number(a.id);
+    if(ib<0)ib=99999+Number(b.id);
+    return ia-ib;
+  });
+}
+function saveFavOrderFromCardsRestored(){
+  const ids=[...document.querySelectorAll('.card[data-id]')].map(c=>Number(c.dataset.id)).filter(id=>favs.has(id));
+  if(ids.length){
+    favOrder=ids;
+    localStorage.setItem('fav_order_ultimate_auto',JSON.stringify(favOrder));
+  }
+}
+function initFavoriteReorderRestored(){
+  if(mode!=='お気に入り')return;
+  const cards=[...document.querySelectorAll('.card[data-id]')];
+  cards.forEach(card=>{
+    let activeCard=null,startY=0,timer=null,dragging=false,moved=false;
+    card.ontouchstart=(e)=>{
+      if(e.target.closest('button,input,select,textarea'))return;
+      activeCard=card; startY=e.touches[0].clientY; dragging=false; moved=false;
+      timer=setTimeout(()=>{dragging=true;card.classList.add('favDragging');if(navigator.vibrate)navigator.vibrate(30);},450);
+    };
+    card.ontouchmove=(e)=>{
+      if(!activeCard)return;
+      const y=e.touches[0].clientY;
+      if(!dragging && Math.abs(y-startY)>8){clearTimeout(timer);activeCard=null;return;}
+      if(!dragging)return;
+      e.preventDefault();
+      const el=document.elementFromPoint(e.touches[0].clientX,y);
+      const target=el?el.closest('.card[data-id]'):null;
+      if(target && target!==activeCard){
+        const list=document.getElementById('list');
+        const rect=target.getBoundingClientRect();
+        if(y<rect.top+rect.height/2)list.insertBefore(activeCard,target);
+        else list.insertBefore(activeCard,target.nextSibling);
+        moved=true;
+      }
+    };
+    card.ontouchend=()=>{
+      clearTimeout(timer);
+      if(dragging && moved){saveFavOrderFromCardsRestored();render();}
+      if(activeCard)activeCard.classList.remove('favDragging');
+      activeCard=null;dragging=false;moved=false;
+    };
+  });
+}
+
+/* favorite reorder final override */
+function initFavoriteReorderRestored(){
+  if(mode!=='お気に入り')return;
+  const cards=[...document.querySelectorAll('.card[data-id]')];
+  cards.forEach(card=>{
+    // overwrite any older touch handlers
+    card.ontouchstart=null;
+    card.ontouchmove=null;
+    card.ontouchend=null;
+
+    let activeCard=null;
+    let startY=0;
+    let startX=0;
+    let timer=null;
+    let dragging=false;
+    let moved=false;
+
+    card.ontouchstart=(e)=>{
+      if(e.target.closest('button,input,select,textarea'))return;
+      activeCard=card;
+      startY=e.touches[0].clientY;
+      startX=e.touches[0].clientX;
+      dragging=false;
+      moved=false;
+      timer=setTimeout(()=>{
+        dragging=true;
+        card.classList.add('favDragging');
+        if(navigator.vibrate)navigator.vibrate(30);
+      },500);
+    };
+
+    card.ontouchmove=(e)=>{
+      if(!activeCard)return;
+      const y=e.touches[0].clientY;
+      const x=e.touches[0].clientX;
+
+      // normal scroll priority before long press starts
+      if(!dragging && (Math.abs(y-startY)>10 || Math.abs(x-startX)>10)){
+        clearTimeout(timer);
+        activeCard=null;
+        return;
+      }
+
+      if(!dragging)return;
+      e.preventDefault();
+
+      const el=document.elementFromPoint(x,y);
+      const target=el ? el.closest('.card[data-id]') : null;
+      if(target && target!==activeCard){
+        const list=document.getElementById('list');
+        const rect=target.getBoundingClientRect();
+        if(y < rect.top + rect.height/2){
+          list.insertBefore(activeCard,target);
+        }else{
+          list.insertBefore(activeCard,target.nextSibling);
+        }
+        moved=true;
+      }
+    };
+
+    card.ontouchend=()=>{
+      clearTimeout(timer);
+      if(dragging && moved){
+        saveFavOrderFromCardsRestored();
+        render();
+      }
+      if(activeCard)activeCard.classList.remove('favDragging');
+      activeCard=null;
+      dragging=false;
+      moved=false;
+    };
+  });
+}
+
+/* multi category filter patch */
+let selectedCategoriesMulti = new Set(JSON.parse(localStorage.getItem('selected_categories_multi')||'[]'));
+
+function getAllCategoriesMulti(){
+  return [...new Set(allPhrases().map(p=>p.category).filter(Boolean))].sort();
+}
+function toggleMultiCatPanel(){
+  multiCatPanel.classList.toggle('show');
+  buildMultiCategoryPanel();
+}
+function buildMultiCategoryPanel(){
+  const cats=getAllCategoriesMulti();
+  multiCatGrid.innerHTML=cats.map(c=>{
+    const checked=selectedCategoriesMulti.has(c)?'checked':'';
+    return `<label class="multiCatItem"><input type="checkbox" value="${esc(c)}" ${checked} onchange="toggleCategoryMulti(this.value,this.checked)"> ${esc(c)}</label>`;
+  }).join('');
+  updateMultiCatButton();
+}
+function toggleCategoryMulti(category,checked){
+  if(checked)selectedCategoriesMulti.add(category);
+  else selectedCategoriesMulti.delete(category);
+  localStorage.setItem('selected_categories_multi',JSON.stringify([...selectedCategoriesMulti]));
+  try{cat.value='すべて';}catch(_){}
+  updateMultiCatButton();
+  render();
+}
+function updateMultiCatButton(){
+  const n=selectedCategoriesMulti.size;
+  multiCatBtn.textContent=n ? `項目 ${n}件選択中` : '項目を選択';
+}
+function clearMultiCategories(){
+  selectedCategoriesMulti.clear();
+  localStorage.setItem('selected_categories_multi','[]');
+  buildMultiCategoryPanel();
+  render();
+}
+function selectAllCategories(){
+  selectedCategoriesMulti=new Set(getAllCategoriesMulti());
+  localStorage.setItem('selected_categories_multi',JSON.stringify([...selectedCategoriesMulti]));
+  try{cat.value='すべて';}catch(_){}
+  buildMultiCategoryPanel();
+  render();
+}
+const originalRenderMultiCategory = render;
+render = function(){
+  originalRenderMultiCategory();
+  if(selectedCategoriesMulti.size){
+    const allowed = new Set(allPhrases().filter(p=>selectedCategoriesMulti.has(p.category)).map(p=>String(p.id)));
+    document.querySelectorAll('.card[data-id]').forEach(card=>{
+      card.style.display = allowed.has(String(card.dataset.id)) ? '' : 'none';
+    });
+  }
+  updateMultiCatButton();
+};
+setTimeout(()=>{buildMultiCategoryPanel();updateMultiCatButton();},0);
+
+/* multi category header cleanup patch */
+function cleanupCategoryHeadersAfterMultiFilter(){
+  // 項目見出しだけが残らないように、次の項目見出しまでに表示カードが無い見出しを消す
+  const list=document.getElementById('list');
+  if(!list)return;
+  const children=[...list.children];
+  children.forEach(el=>el.classList && el.classList.remove('hiddenByMulti'));
+
+  for(let i=0;i<children.length;i++){
+    const el=children[i];
+    if(!el.classList)continue;
+    const isHeader = el.classList.contains('catHeader') || el.classList.contains('section') || el.classList.contains('groupTitle') || el.tagName==='H2' || el.tagName==='H3';
+    if(!isHeader)continue;
+
+    let hasVisibleCard=false;
+    for(let j=i+1;j<children.length;j++){
+      const next=children[j];
+      if(next.classList){
+        const nextIsHeader = next.classList.contains('catHeader') || next.classList.contains('section') || next.classList.contains('groupTitle') || next.tagName==='H2' || next.tagName==='H3';
+        if(nextIsHeader)break;
+        if(next.classList.contains('card') && next.style.display!=='none'){
+          hasVisibleCard=true;
+          break;
+        }
+      }
+    }
+    if(!hasVisibleCard)el.classList.add('hiddenByMulti');
+  }
+}
+
+/* multi category render final override */
+const _renderBeforeHeaderCleanup = render;
+render = function(){
+  _renderBeforeHeaderCleanup();
+  if(typeof selectedCategoriesMulti!=='undefined' && selectedCategoriesMulti.size){
+    const allowed = new Set(allPhrases().filter(p=>selectedCategoriesMulti.has(p.category)).map(p=>String(p.id)));
+    document.querySelectorAll('.card[data-id]').forEach(card=>{
+      card.style.display = allowed.has(String(card.dataset.id)) ? '' : 'none';
+    });
+  }
+  cleanupCategoryHeadersAfterMultiFilter();
+  if(typeof updateMultiCatButton==='function')updateMultiCatButton();
+};
+
+/* multi category pre-render filter final patch */
+const __originalRenderForMultiPreFilter = render;
+render = function(){
+  if(typeof selectedCategoriesMulti !== 'undefined' && selectedCategoriesMulti.size){
+    const __originalAllPhrases = allPhrases;
+    const selected = new Set([...selectedCategoriesMulti]);
+    allPhrases = function(){
+      return __originalAllPhrases().filter(p => selected.has(p.category));
+    };
+    try{
+      __originalRenderForMultiPreFilter();
+    }finally{
+      allPhrases = __originalAllPhrases;
+    }
+  }else{
+    __originalRenderForMultiPreFilter();
+  }
+  if(typeof updateMultiCatButton==='function')updateMultiCatButton();
+};
+
+let rubyVisible = localStorage.getItem('ruby_visible_setting') !== '0';
+function applyRubyDisplay(){
+  document.body.classList.toggle('hideRuby', !rubyVisible);
+  if(typeof rubyToggleBtn!=='undefined'){
+    rubyToggleBtn.textContent = rubyVisible ? '発音 ON' : '発音 OFF';
+  }
+}
+function toggleRubyDisplay(){
+  rubyVisible = !rubyVisible;
+  localStorage.setItem('ruby_visible_setting', rubyVisible ? '1' : '0');
+  applyRubyDisplay();
+}
+setTimeout(applyRubyDisplay,0);
+
+
+
+
+/* multi-language katakana support patch */
+function kataFromRoman(text,lang){
+  if(!text)return '';
+  let s=String(text).toLowerCase().replace(/[.,!?;:()]/g,' ').replace(/\s+/g,' ').trim();
+  const dict={
+    'good':'グッド','morning':'モーニング','hello':'ハロー','please':'プリーズ','fasten':'ファスン','your':'ユア','seat':'シート','belt':'ベルト',
+    'close':'クローズ','door':'ドア','open':'オープン','check':'チェック','mirror':'ミラー','start':'スタート','driving':'ドライビング','lesson':'レッスン',
+    'turn':'ターン','right':'ライト','left':'レフト','stop':'ストップ','slowly':'スローリー','brake':'ブレーキ','accelerator':'アクセルレーター',
+    'signal':'シグナル','look':'ルック','careful':'ケアフル','dangerous':'デンジャラス','thank':'サンク','you':'ユー','today':'トゥデイ',
+    'finished':'フィニッシュト','question':'クエスチョン','understand':'アンダースタンド','again':'アゲイン','straight':'ストレート',
+    'back':'バック','park':'パーク','reverse':'リバース','speed':'スピード','keep':'キープ','safe':'セーフ','distance':'ディスタンス',
+    'vamos':'ヴァモス','começar':'コメサール','comecar':'コメサール','aula':'アウラ','direção':'ジレサォン','direcao':'ジレサォン',
+    'por':'ポル','favor':'ファヴォール','coloque':'コロキ','cinto':'シント','segurança':'セグランサ','seguranca':'セグランサ',
+    'feche':'フェシ','porta':'ポルタ','olá':'オラ','ola':'オラ','bom':'ボン','dia':'ジア','obrigado':'オブリガード'
+  };
+  let words=s.split(' ');
+  let out=words.map(w=>{
+    if(dict[w])return dict[w];
+    let r=w.replace(/tion/g,'ション').replace(/sion/g,'ジョン').replace(/th/g,'ス').replace(/sh/g,'シュ').replace(/ch/g,'チ')
+      .replace(/ph/g,'フ').replace(/ck/g,'ック').replace(/ng/g,'ング').replace(/oo/g,'ウー').replace(/ee/g,'イー')
+      .replace(/ea/g,'イー').replace(/ou/g,'アウ').replace(/ow/g,'アウ').replace(/ai/g,'エイ').replace(/ei/g,'エイ')
+      .replace(/ay/g,'エイ').replace(/er/g,'アー').replace(/ar/g,'アー').replace(/or/g,'オー');
+    const map={a:'ア',b:'ブ',c:'ク',d:'ド',e:'エ',f:'フ',g:'グ',h:'ハ',i:'イ',j:'ジ',k:'ク',l:'ル',m:'ム',n:'ン',o:'オ',p:'プ',q:'ク',r:'ル',s:'ス',t:'ト',u:'ウ',v:'ヴ',w:'ワ',x:'クス',y:'イ',z:'ズ',á:'ア',à:'ア',ã:'アン',â:'ア',é:'エ',ê:'エ',í:'イ',ó:'オ',ô:'オ',õ:'オン',ú:'ウ',ç:'ス'};
+    return [...r].map(ch=>map[ch]||ch).join('').replace(/(ア|イ|ウ|エ|オ){2,}/g,'$1');
+  }).filter(Boolean).join(' ');
+  return out;
+}
+function kataFromChinese(text){
+  if(!text)return '';
+  const map={'请':'チン','系':'シー','好':'ハオ','安':'アン','全':'チュエン','带':'ダイ','开':'カイ','始':'シー','驾':'ジア','驶':'シー','教':'ジャオ','习':'シー','早':'ザオ','上':'シャン','你':'ニー','关':'グアン','车':'チョー','门':'メン','看':'カン','后':'ホウ','视':'シー','镜':'ジン','右':'ヨウ','左':'ズオ','转':'ジュアン','停':'ティン','慢':'マン','行':'シン','刹':'シャー','踩':'ツァイ','油':'ヨウ','打':'ダー','向':'シャン','灯':'ダン','注':'ジュー','意':'イー','危':'ウェイ','险':'シエン','谢':'シエ','今':'ジン','天':'ティエン','结':'ジエ','束':'シュー','明':'ミン','白':'バイ','吗':'マ','再':'ザイ','一':'イー','次':'ツー'};
+  let out='';
+  for(let i=0;i<text.length;i++){let ch=text[i];if(map[ch])out+=map[ch]+' ';}
+  return out.trim();
+}
+function getRubyForLang(p,l){
+  if(l==='vi')return p.ruby||'';
+  if(l==='en')return p.enRuby||p.rubyEn||kataFromRoman(p.en,'en');
+  if(l==='zh')return p.zhRuby||p.rubyZh||kataFromChinese(p.zh);
+  if(l==='pt')return p.ptRuby||p.rubyPt||kataFromRoman(p.pt,'pt');
+  return '';
+}
+
+
+/* conversation translation patch */
+let convTranslatedText = '';
+let convTranslatedLang = 'vi';
+
+function openConversationModal(){
+  try{if(typeof addOverlay!=='undefined')addOverlay.classList.remove('show');}catch(_){}
+  try{if(typeof editOverlay!=='undefined')editOverlay.classList.remove('show');}catch(_){}
+  try{if(typeof commonPanelOverlay!=='undefined')commonPanelOverlay.classList.remove('show');}catch(_){}
+  try{if(typeof addPanel!=='undefined')addPanel.classList.remove('show');}catch(_){}
+  try{if(typeof editPanel!=='undefined')editPanel.classList.remove('show');}catch(_){}
+  convOverlay.classList.add('show');
+  document.body.classList.add('modalOpen');
+  try{
+    convLang.value = (typeof lang!=='undefined' && lang.value) ? lang.value : 'vi';
+  }catch(_){}
+  setTimeout(()=>{try{convJp.focus();}catch(_){}},120);
+}
+
+function closeConversationModal(){
+  convOverlay.classList.remove('show');
+  document.body.classList.remove('modalOpen');
+}
+
+function clearConversation(){
+  convJp.value='';
+  convTranslatedText='';
+  convResult.textContent='翻訳結果がここに表示されます。';
+}
+
+function convTargetCode(l){
+  if(l==='zh')return 'zh-CN';
+  return l;
+}
+
+async function translateConversation(){
+  const jp=convJp.value.trim();
+  if(!jp)return alert('日本語を入力してください');
+  const l=convLang.value;
+  convTranslatedLang=l;
+  convResult.textContent='翻訳中...';
+  try{
+    if(typeof translateOne!=='function')throw new Error('translateOne not found');
+    const translated=await translateOne(jp,convTargetCode(l));
+    convTranslatedText=translated||jp;
+    convResult.innerHTML='<div class="badge">'+esc(LANGS[l].label)+'</div><div>'+esc(convTranslatedText)+'</div>';
+    if(typeof status!=='undefined')status.textContent='Googleで会話翻訳しました。';
+  }catch(e){
+    convTranslatedText='';
+    convResult.textContent='翻訳に失敗しました。Netlify Functions と Netlify Functionsを確認してください。';
+    alert('翻訳に失敗しました。Netlify Functions と Netlify Functionsを確認してください。');
+  }
+}
+
+function speakConversationResult(){
+  if(!convTranslatedText)return alert('先に翻訳してください');
+  const jp=convJp.value.trim()||'';
+  speak(convTranslatedText,jp);
+}
+
+function startConversationVoiceInput(){alert('日本語欄をタップして、スマホのキーボードのマイクボタンを使ってください。');}
+
+setTimeout(()=>{
+  try{
+    convOverlay.addEventListener('click',(e)=>{
+      if(e.target===convOverlay)closeConversationModal();
+    });
+  }catch(_){}
+},0);
+
+
+
+
+
+/* Google translation via Netlify Function proxy */
+async function translateOne(text,target){
+  const map = {
+    vi: 'VI',
+    en: 'EN-US',
+    'en-US': 'EN-US',
+    zh: 'ZH',
+    'zh-CN': 'ZH',
+    pt: 'PT-BR',
+    'pt-BR': 'PT-BR'
+  };
+  const t = map[target] || String(target || 'VI').toUpperCase();
+  const res = await fetch('/.netlify/functions/translate', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ text:text, target_lang:t, source_lang:'JA' })
+  });
+  const data = await res.json().catch(()=>({}));
+  if(!res.ok){
+    throw new Error(data.error || 'Google translation proxy error');
+  }
+  return data.text || text;
+}
+
+</script>
+<div id="editOverlay" class="editOverlay">
+  <div class="editModal">
+    <div class="editModalTitle">フレーズ編集</div>
+    <input type="hidden" id="editId2">
+    <div class="formgrid">
+      <select id="editMode2"><option>教習</option><option>指導</option><option>冬道</option><option>MT車</option><option>検定</option><option>緊急</option><option>質問</option></select>
+      <input id="editCat2" placeholder="項目">
+    </div>
+    <input id="editJp2" placeholder="日本語">
+    <input id="editVi2" placeholder="ベトナム語">
+    <input id="editRuby2" placeholder="ベトナム語カタカナ発音"><input id="editEnRuby2" placeholder="英語カタカナ発音（任意）"><input id="editZhRuby2" placeholder="中国語カタカナ発音（任意）"><input id="editPtRuby2" placeholder="ポルトガル語カタカナ発音（任意）">
+    <input id="editEn2" placeholder="英語">
+    <input id="editZh2" placeholder="中国語">
+    <input id="editPt2" placeholder="ポルトガル語">
+    <div class="formgrid">
+      <button class="formbtn primary" onclick="saveEditPhrase()">編集を保存</button>
+      <button class="formbtn" onclick="closeEditPanel()">閉じる</button>
+    </div>
+    <p class="small">編集内容はこの端末に保存されます。</p>
+  </div>
+</div>
+
+<div id="addOverlay" class="addOverlay">
+  <div class="addModal">
+    <div class="addModalTitle">新規フレーズ登録・自動翻訳</div>
+    <p class="small">日本語だけ入力して「4言語へ自動翻訳」を押してください。翻訳結果を確認・修正してから登録できます。</p>
+    <div class="formgrid">
+      <select id="newMode2"><option>教習</option><option>指導</option><option>冬道</option><option>MT車</option><option>検定</option><option>緊急</option><option>質問</option></select>
+      <input id="newCat2" placeholder="項目：例）基本操作">
+    </div>
+    <input id="newJp2" placeholder="日本語：例）ブレーキを構えましょう">
+    <div class="formgrid">
+      <button class="formbtn primary" onclick="autoTranslateModal()">4言語へ自動翻訳</button>
+      <button class="formbtn warn" onclick="copyFromJapaneseModal()">日本語を仮入力</button>
+    </div>
+    <input id="newVi2" placeholder="ベトナム語">
+    <input id="newRuby2" placeholder="ベトナム語カタカナ発音（必要なら手入力）"><input id="newEnRuby2" placeholder="英語カタカナ発音（任意）"><input id="newZhRuby2" placeholder="中国語カタカナ発音（任意）"><input id="newPtRuby2" placeholder="ポルトガル語カタカナ発音（任意）">
+    <input id="newEn2" placeholder="英語">
+    <input id="newZh2" placeholder="中国語">
+    <input id="newPt2" placeholder="ポルトガル語">
+    <div class="formgrid">
+      <button class="formbtn primary" onclick="addPhraseModal()">登録する</button>
+      <button class="formbtn" onclick="closeAddModal()">閉じる</button>
+    </div>
+    <p class="small">この白い登録画面内を上下にスクロールできます。登録したフレーズはこの端末に保存されます。</p>
+  </div>
+</div>
+
+<div id="commonPanelOverlay" class="panelOverlay">
+  <div class="panelModal">
+    <div id="commonPanelTitle" class="panelModalTitle"></div>
+    <div id="commonPanelContent"></div>
+    <div style="margin-top:12px">
+      <button class="formbtn" onclick="closeCommonPanel()">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+  });
+}
+</script>
+
+<div id="convOverlay" class="convOverlay">
+  <div class="convModal">
+    <div class="convModalTitle">会話翻訳 <span style="font-size:12px;color:#8490a3">翻訳：Google</span></div>
+    <p class="small">登録せずに、その場だけ日本語を翻訳して音声再生できます。日本語欄はキーボードのマイク入力も使えます。</p>
+    <select id="convLang">
+      <option value="vi">ベトナム語</option>
+      <option value="en">英語</option>
+      <option value="zh">中国語</option>
+      <option value="pt">ポルトガル語</option>
+    </select>
+    <textarea id="convJp" placeholder="教習生に伝えたい日本語を入力してください（キーボードのマイク入力も使えます）"></textarea>
+    <div class="convActions">
+      <button class="formbtn primary" onclick="translateConversation()">翻訳して再生</button>
+      
+      <button class="formbtn" onclick="clearConversation()">クリア</button>
+    </div>
+    <div id="convResult" class="convResult">翻訳結果がここに表示されます。</div>
+    <div class="convActions">
+      <button class="formbtn primary" onclick="speakConversationResult()">もう一度再生</button>
+      <button class="formbtn" onclick="closeConversationModal()">閉じる</button>
+    </div>
+    <div class="convSmall">※自動翻訳はインターネット接続が必要です。翻訳結果はフレーズ登録されません。</div>
+  </div>
+</div>
+
+
+<script>
+/* translate-and-play + history voice replay patch */
+function convLangLabel(l){
+  try{return LANGS[l] ? LANGS[l].label : '翻訳';}catch(_){return '翻訳';}
+}
+
+function pickVoiceForLangCode(code){
+  try{
+    const list = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
+    const exact = list.find(v => (v.lang||'').toLowerCase() === String(code||'').toLowerCase());
+    if(exact)return exact;
+    const prefix = String(code||'').split('-')[0].toLowerCase();
+    return list.find(v => (v.lang||'').toLowerCase().startsWith(prefix)) || null;
+  }catch(_){
+    return null;
+  }
+}
+
+function speakWithLang(text, jp, langKey){
+  if(!text)return;
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const cfg = (typeof LANGS !== 'undefined' && LANGS[langKey]) ? LANGS[langKey] : LANGS.vi;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = cfg.code;
+  const v = pickVoiceForLangCode(cfg.code);
+  if(v)u.voice = v;
+  try{u.rate = parseFloat(rate.value) || 0.9;}catch(_){u.rate = 0.9;}
+  speechSynthesis.speak(u);
+
+  const item = {
+    jp: jp || '',
+    t: text,
+    label: cfg.label,
+    lang: langKey || 'vi',
+    time: new Date().toLocaleTimeString()
+  };
+  try{
+    history.unshift(item);
+    history = history.slice(0,30);
+    localStorage.setItem('hist_ultimate_auto', JSON.stringify(history));
+  }catch(_){}
+}
+
+async function translateConversation(){
+  const jp = convJp.value.trim();
+  if(!jp)return alert('日本語を入力してください');
+  const l = convLang.value || 'vi';
+  convTranslatedLang = l;
+  convTranslatedText = '';
+  convResult.textContent = 'Googleで翻訳中...';
+
+  const btns = Array.from(document.querySelectorAll('button'));
+  const btn = btns.find(b => b.getAttribute('onclick') === 'translateConversation()');
+  if(btn){
+    btn.disabled = true;
+    btn.textContent = '翻訳中...';
+  }
+
+  try{
+    if(typeof translateOne !== 'function')throw new Error('translateOne not found');
+    const translated = await translateOne(jp, convTargetCode(l));
+    convTranslatedText = translated || jp;
+    convResult.innerHTML = '<div class="badge">'+esc(convLangLabel(l))+'</div><div>'+esc(convTranslatedText)+'</div>' +
+      (l === 'vi' && typeof kataFromRoman === 'function' ? '<div class="ruby">'+esc(kataFromRoman(convTranslatedText,'vi'))+'</div>' : '');
+    if(typeof status !== 'undefined')status.textContent = 'Googleで会話翻訳し、音声再生しました。';
+    speakWithLang(convTranslatedText, jp, l);
+  }catch(e){
+    convTranslatedText = '';
+    convResult.textContent = '翻訳に失敗しました。Netlify Functions と Netlify Functionsを確認してください。';
+    alert('翻訳に失敗しました。Netlify Functions と Netlify Functionsを確認してください。');
+  }finally{
+    if(btn){
+      btn.disabled = false;
+      btn.textContent = '翻訳して再生';
+    }
+  }
+}
+
+function speakConversationResult(){
+  if(!convTranslatedText)return alert('先に翻訳してください');
+  const jp = convJp.value.trim() || '';
+  const l = convTranslatedLang || convLang.value || 'vi';
+  speakWithLang(convTranslatedText, jp, l);
+}
+
+function historyLangFromLabel(label){
+  if(label === 'ベトナム語')return 'vi';
+  if(label === '英語')return 'en';
+  if(label === '中国語')return 'zh';
+  if(label === 'ポルトガル語')return 'pt';
+  return (typeof lang !== 'undefined' && lang.value) ? lang.value : 'vi';
+}
+
+function speakHistory(indexFromNewest){
+  const items = (history || []).slice().reverse();
+  const item = items[indexFromNewest];
+  if(!item)return;
+
+  // 登録フレーズ以外の会話翻訳履歴も、その履歴の翻訳文をそのまま再生
+  const langKey = item.lang || historyLangFromLabel(item.label);
+  const text = item.t || item.text || '';
+  const jp = item.jp || '';
+  if(text){
+    speakWithLang(text, jp, langKey);
+    return;
+  }
+
+  const p = (typeof findPhraseFromHistoryItem === 'function') ? findPhraseFromHistoryItem(item) : null;
+  if(p){
+    const l = (typeof lang !== 'undefined' && lang.value) ? lang.value : 'vi';
+    speak(p[l] || p.vi || p.jp, p.jp);
+    return;
+  }
+
+  alert('再生できる履歴がありません');
+}
+
+function historyText(x){
+  const jp = x.jp ? x.jp + ' → ' : '';
+  return (x.time || '') + ' / ' + (x.label || '') + '　' + jp + (x.t || x.text || '');
+}
+
+function toggleHistory(){
+  const items = (history || []).slice().reverse();
+  if(!items.length){
+    if(typeof openCommonPanel === 'function')openCommonPanel('履歴','<p class="small">履歴はありません。</p>');
+    else {
+      historyPanel.classList.toggle('show');
+      historyPanel.innerHTML = '<b>再生履歴</b><p>履歴はまだありません。</p>';
+    }
+    return;
+  }
+
+  const body = '<div class="historyHint">履歴の「再生」を押すと、登録フレーズ以外の会話翻訳も音声再生できます。</div>' +
+    '<button class="formbtn warn" onclick="clearAllHistoryFromPanel()">履歴をすべて削除</button>' +
+    items.map((x,i)=>`<div class="histRow"><div class="histText" onclick="speakHistory(${i})">🔊 ${esc(historyText(x))}</div><button class="histReplayBtn" onclick="speakHistory(${i})">再生</button><button class="histDeleteBtn" onclick="deleteHistoryItem(${i},event)">削除</button></div>`).join('');
+
+  if(typeof openCommonPanel === 'function')openCommonPanel('履歴', body);
+  else {
+    historyPanel.classList.toggle('show');
+    historyPanel.innerHTML = '<b>再生履歴</b>' + body;
+  }
+}
+</script>
+
+</body></html>
