@@ -1,12 +1,12 @@
 {
-  "name": "教習翻訳",
+  "name": "教習翻訳 Google緑版",
   "short_name": "教習翻訳",
-  "description": "教習所向け多言語音声再生アプリ Google翻訳版",
+  "description": "教習所向け多言語音声アプリ Google翻訳 緑版",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f7fb",
-  "theme_color": "#16a05a",
+  "background_color": "#f4fbf6",
+  "theme_color": "#159447",
   "orientation": "portrait",
   "icons": [
     {

@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>教習所多言語音声アプリ Google翻訳版</title><style>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>教習翻訳 Google緑版</title><style>
 body{margin:0;background:#f4f7fb;color:#172033;font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif}header{position:sticky;top:0;background:linear-gradient(135deg,#1266f1,#0b3f94);color:white;padding:14px;z-index:5;transition:transform .22s ease,opacity .22s ease}header.hide{transform:translateY(-100%);opacity:0;pointer-events:none}h1{font-size:18px;margin:0 0 4px}.sub{font-size:12px;margin:0;opacity:.9}.toolbar{position:sticky;top:67px;background:white;padding:10px;border-bottom:1px solid #d9e2ef;z-index:4;transition:transform .22s ease,opacity .22s ease}.toolbar.hide{transform:translateY(-125%);opacity:0;pointer-events:none}input,select,button{font:inherit}input,select{width:100%;padding:9px;border:1px solid #d9e2ef;border-radius:12px;margin:4px 0;background:white}#q{font-size:16px;padding:11px;border:2px solid #1266f1;background:#f8fbff;width:65%}.searchRow{display:flex;gap:8px;align-items:center}.micbtn{width:72px;flex:none}.controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.modes,.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}.filters{display:none}body.allmode .filters{display:grid}.modes button,.filters button,.toolbtn{border:1px solid #d9e2ef;border-radius:12px;background:#eaf2ff;color:#0b3f94;padding:9px 4px;font-weight:900;font-size:13px}.modes button.active{background:#1266f1;color:white}.filters button.off{background:#f1f3f6;color:#8490a3;text-decoration:line-through}.danger.active{background:#d61f2c!important}.tools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}main{padding:12px;max-width:900px;margin:auto}.note{background:#fff8df;border:1px solid #f0d98c;border-radius:12px;padding:10px;font-size:13px}.cat{font-weight:900;color:#5d6b82;margin:18px 4px 8px}.card{width:100%;text-align:left;background:white;border:1px solid #d9e2ef;border-radius:16px;margin:8px 0;padding:14px;box-shadow:0 2px 8px #1020400d;position:relative}.card.emergency{border:2px solid #d61f2c;background:#fff4f4}.jp{font-size:18px;font-weight:900;padding-right:46px}.target{margin-top:8px;font-size:18px;color:#0b4e2f;font-weight:900}.ruby{margin-top:3px;font-size:14px;color:#5d6b82}.badge{font-size:12px;color:#0b3f94;background:#eaf2ff;border-radius:999px;padding:3px 8px;display:inline-block;margin-top:6px;font-weight:800}.fav{position:absolute;right:10px;top:10px;border:0;background:#fff3c4;border-radius:999px;width:36px;height:36px;font-size:20px}.footer{position:sticky;bottom:0;background:#fffffff2;border-top:1px solid #d9e2ef;padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.big{border:0;border-radius:12px;padding:12px;color:white;background:#1266f1;font-weight:900}.stop{background:#3b4556}.status,.count{font-size:12px;color:#5d6b82;margin-top:4px}.panel{display:none;background:white;border:1px solid #d9e2ef;border-radius:14px;padding:10px;margin-top:8px}.panel.show{display:block}.historyItem{border-bottom:1px solid #eef2f8;padding:8px 0;font-size:14px}@media(max-width:560px){.controls{grid-template-columns:1fr}.modes,.filters{grid-template-columns:repeat(3,1fr)}.tools{grid-template-columns:1fr}}
 .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .formbtn{border:1px solid #d9e2ef;border-radius:12px;background:#eaf2ff;color:#0b3f94;padding:9px 4px;font-weight:900;font-size:13px}
@@ -190,10 +190,176 @@ button:disabled{opacity:.65;filter:grayscale(.15)}
 
 </style>
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#1266f1">
+<meta name="theme-color" content="#159447">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="教習音声アプリ">
-<link rel="apple-touch-icon" href="./icon-512.png">
+<meta name="apple-mobile-web-app-title" content="教習翻訳">
+<link rel="apple-touch-icon" href="./icon.svg">
+<style>
+/* Google green theme override */
+:root{--main:#159447;--main2:#0f6f35;--light:#eaf7ee;--text:#0b4f25}
+header{background:linear-gradient(135deg,#1fb455,#0b6c31)!important}
+button.active,.active{background:#159447!important;color:#fff!important}
+.buttonGrid button.active,.btnGrid button.active{background:#159447!important;color:#fff!important}
+button:not(.star):not(.closeBtn):not(.close){border-color:#b9dec5}
+.controls input,.search,input[type="search"]{border-color:#159447!important}
+.bottomBar button+button,.bottom button+button,.convButtons button:first-child,.two button:first-child{background:#159447!important}
+.trans,.tr{color:#08783a!important}
+.badge,.langTag{background:#eaf7ee!important;color:#0b6c31!important}
+.kana:not(:empty):before,.pron:before{color:#0b6c31!important}
+a{color:#0b6c31}
+</style>
+<style>
+/* ===== Google緑版 完成配色 v2 ===== */
+:root{
+  --google-main:#159447;
+  --google-dark:#0b6c31;
+  --google-light:#eef9f1;
+  --google-light2:#e3f4e8;
+  --google-border:#acd9b8;
+  --google-text:#075f2a;
+}
+
+/* 上部 */
+html body header{
+  background:linear-gradient(135deg,#19a64b,#08712f)!important;
+  color:#fff!important;
+}
+
+/* 検索窓・選択欄 */
+html body #q,
+html body input[type="search"],
+html body .searchRow input,
+html body .toolbar input{
+  border:2px solid var(--google-main)!important;
+  background:#fbfffc!important;
+  color:#172033!important;
+  outline-color:var(--google-main)!important;
+}
+html body #q:focus,
+html body input:focus,
+html body select:focus{
+  border-color:var(--google-main)!important;
+  box-shadow:0 0 0 3px rgba(21,148,71,.14)!important;
+  outline:none!important;
+}
+html body select,
+html body .toolbar select{
+  border-color:#cfe6d5!important;
+  background:#fff!important;
+}
+html body #itemSelect,
+html body select#itemSelect{
+  border:1.5px solid var(--google-border)!important;
+  color:#172033!important;
+}
+
+/* メニューボタン全体：薄い緑 */
+html body .modes button,
+html body .filters button,
+html body .toolbtn,
+html body .formbtn,
+html body .buttonGrid button,
+html body .btnGrid button{
+  background:var(--google-light)!important;
+  color:var(--google-text)!important;
+  border:1px solid var(--google-border)!important;
+}
+
+/* 選択中：濃い緑 */
+html body .modes button.active,
+html body .filters button.active,
+html body .buttonGrid button.active,
+html body .btnGrid button.active,
+html body button.active,
+html body .active{
+  background:linear-gradient(135deg,#18a64c,#08742f)!important;
+  color:#fff!important;
+  border-color:#0b7a35!important;
+}
+
+/* OFF系は薄いグレー寄りにしつつ緑枠 */
+html body .filters button.off,
+html body button.off{
+  background:#f2f7f3!important;
+  color:#7a8d80!important;
+  border-color:#cde2d2!important;
+}
+
+/* 危険ボタンがアクティブの時だけ赤は残す */
+html body .danger.active{
+  background:#d61f2c!important;
+  color:#fff!important;
+  border-color:#d61f2c!important;
+}
+
+/* 翻訳・発音・タグ周り */
+html body .badge,
+html body .tag,
+html body .langTag{
+  background:#e6f6eb!important;
+  color:var(--google-text)!important;
+}
+html body .trans,
+html body .tr,
+html body .translated,
+html body .phraseText,
+html body .card .voiceText{
+  color:#08783a!important;
+}
+html body .ruby,
+html body .kana{
+  color:#4f6b5a!important;
+}
+html body .cat,
+html body .categoryTitle,
+html body h2{
+  color:var(--google-text)!important;
+}
+
+/* 下部ボタン */
+html body .footer .big.stop,
+html body .bottomBar .stop,
+html body button.stop{
+  background:linear-gradient(135deg,#1b1d21,#050608)!important;
+  color:#fff!important;
+  border-color:#111!important;
+}
+html body .footer .big:not(.stop),
+html body .bottomBar button:not(.stop),
+html body button[onclick="playFirst()"]{
+  background:linear-gradient(135deg,#1aae4f,#08712f)!important;
+  color:#fff!important;
+  border-color:#08712f!important;
+}
+
+/* 会話翻訳の主要ボタン */
+html body .convActions .primary,
+html body button[onclick="translateConversation()"],
+html body button[onclick="speakConversationResult()"]{
+  background:linear-gradient(135deg,#1aae4f,#08712f)!important;
+  color:#fff!important;
+  border-color:#08712f!important;
+}
+
+/* 履歴再生 */
+html body .histReplayBtn{
+  background:#159447!important;
+  color:#fff!important;
+}
+
+/* リンク・アイコン色 */
+html body a{
+  color:var(--google-dark)!important;
+}
+
+/* カード内 */
+html body .card{
+  border-color:#d8eadc!important;
+}
+html body .star{
+  color:#f1b700!important;
+}
+</style>
 </head><body>
 <header><h1 id="appTitle">富山教習所向け 多言語音声アプリ</h1><p class="sub">全165フレーズ / 自動翻訳登録 / 表示切替 / 4言語</p><div id="adminBadge" class="adminBadge">編集モード ON</div></header><section class="toolbar"><div class="searchRow"><input id="q" placeholder="検索"></div><div class="controls"><select id="lang"><option value="vi">ベトナム語</option><option value="en">英語</option><option value="zh">中国語</option><option value="pt">ポルトガル語</option></select><select id="cat"></select>
 <button id="multiCatBtn" class="multiCatBtn" onclick="toggleMultiCatPanel()">項目を選択</button>
@@ -1636,7 +1802,7 @@ if ('serviceWorker' in navigator) {
     </select>
     <textarea id="convJp" placeholder="教習生に伝えたい日本語を入力してください（キーボードのマイク入力も使えます）"></textarea>
     <div class="convActions">
-      <button class="formbtn primary" onclick="translateConversation()">翻訳して再生</button>
+      <button class="formbtn primary" onclick="translateConversation()">翻訳・再生</button>
       
       <button class="formbtn" onclick="clearConversation()">クリア</button>
     </div>
