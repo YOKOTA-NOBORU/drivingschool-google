@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>教習翻訳 Google緑版</title><style>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>教習所向け 多言語音声アプリ</title><style>
 body{margin:0;background:#f4f7fb;color:#172033;font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif}header{position:sticky;top:0;background:linear-gradient(135deg,#1266f1,#0b3f94);color:white;padding:14px;z-index:5;transition:transform .22s ease,opacity .22s ease}header.hide{transform:translateY(-100%);opacity:0;pointer-events:none}h1{font-size:18px;margin:0 0 4px}.sub{font-size:12px;margin:0;opacity:.9}.toolbar{position:sticky;top:67px;background:white;padding:10px;border-bottom:1px solid #d9e2ef;z-index:4;transition:transform .22s ease,opacity .22s ease}.toolbar.hide{transform:translateY(-125%);opacity:0;pointer-events:none}input,select,button{font:inherit}input,select{width:100%;padding:9px;border:1px solid #d9e2ef;border-radius:12px;margin:4px 0;background:white}#q{font-size:16px;padding:11px;border:2px solid #1266f1;background:#f8fbff;width:65%}.searchRow{display:flex;gap:8px;align-items:center}.micbtn{width:72px;flex:none}.controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.modes,.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}.filters{display:none}body.allmode .filters{display:grid}.modes button,.filters button,.toolbtn{border:1px solid #d9e2ef;border-radius:12px;background:#eaf2ff;color:#0b3f94;padding:9px 4px;font-weight:900;font-size:13px}.modes button.active{background:#1266f1;color:white}.filters button.off{background:#f1f3f6;color:#8490a3;text-decoration:line-through}.danger.active{background:#d61f2c!important}.tools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}main{padding:12px;max-width:900px;margin:auto}.note{background:#fff8df;border:1px solid #f0d98c;border-radius:12px;padding:10px;font-size:13px}.cat{font-weight:900;color:#5d6b82;margin:18px 4px 8px}.card{width:100%;text-align:left;background:white;border:1px solid #d9e2ef;border-radius:16px;margin:8px 0;padding:14px;box-shadow:0 2px 8px #1020400d;position:relative}.card.emergency{border:2px solid #d61f2c;background:#fff4f4}.jp{font-size:18px;font-weight:900;padding-right:46px}.target{margin-top:8px;font-size:18px;color:#0b4e2f;font-weight:900}.ruby{margin-top:3px;font-size:14px;color:#5d6b82}.badge{font-size:12px;color:#0b3f94;background:#eaf2ff;border-radius:999px;padding:3px 8px;display:inline-block;margin-top:6px;font-weight:800}.fav{position:absolute;right:10px;top:10px;border:0;background:#fff3c4;border-radius:999px;width:36px;height:36px;font-size:20px}.footer{position:sticky;bottom:0;background:#fffffff2;border-top:1px solid #d9e2ef;padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.big{border:0;border-radius:12px;padding:12px;color:white;background:#1266f1;font-weight:900}.stop{background:#3b4556}.status,.count{font-size:12px;color:#5d6b82;margin-top:4px}.panel{display:none;background:white;border:1px solid #d9e2ef;border-radius:14px;padding:10px;margin-top:8px}.panel.show{display:block}.historyItem{border-bottom:1px solid #eef2f8;padding:8px 0;font-size:14px}@media(max-width:560px){.controls{grid-template-columns:1fr}.modes,.filters{grid-template-columns:repeat(3,1fr)}.tools{grid-template-columns:1fr}}
 .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .formbtn{border:1px solid #d9e2ef;border-radius:12px;background:#eaf2ff;color:#0b3f94;padding:9px 4px;font-weight:900;font-size:13px}
@@ -188,6 +188,18 @@ button:disabled{opacity:.65;filter:grayscale(.15)}
 .histReplayBtn{border:0;border-radius:10px;background:#1266f1;color:white;padding:8px 10px;font-weight:900;margin-top:6px}
 .histText{cursor:pointer}
 
+
+/* 履歴表示シンプル化 */
+.simpleHistRow{border-bottom:1px solid #eef2f8;padding:10px 0}
+.histJp{font-weight:900;color:#172033;line-height:1.45}
+.histForeign{font-weight:800;color:#0b4e2f;line-height:1.45;margin-top:4px;white-space:pre-wrap}
+.histBtns{display:flex;gap:8px;margin-top:8px}
+.histReplayBtn{border:0;border-radius:10px;background:#1266f1;color:white;padding:8px 12px;font-weight:900}
+.histDeleteBtn{border:0;border-radius:10px;background:#9b1c31;color:white;padding:8px 12px;font-weight:900}
+.historyHint{font-size:12px;color:#5d6b82;margin:0 0 8px}
+
+.histReplayBtn{background:#159447!important;color:white!important}
+
 </style>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#159447">
@@ -361,7 +373,7 @@ html body .star{
 }
 </style>
 </head><body>
-<header><h1 id="appTitle">富山教習所向け 多言語音声アプリ</h1><p class="sub">全165フレーズ / 自動翻訳登録 / 表示切替 / 4言語</p><div id="adminBadge" class="adminBadge">編集モード ON</div></header><section class="toolbar"><div class="searchRow"><input id="q" placeholder="検索"></div><div class="controls"><select id="lang"><option value="vi">ベトナム語</option><option value="en">英語</option><option value="zh">中国語</option><option value="pt">ポルトガル語</option></select><select id="cat"></select>
+<header><h1 id="appTitle">教習所向け 多言語音声アプリ</h1><p class="sub">全165フレーズ / 自動翻訳登録 / 表示切替 / 4言語</p><div id="adminBadge" class="adminBadge">編集モード ON</div></header><section class="toolbar"><div class="searchRow"><input id="q" placeholder="検索"></div><div class="controls"><select id="lang"><option value="vi">ベトナム語</option><option value="en">英語</option><option value="zh">中国語</option><option value="pt">ポルトガル語</option></select><select id="cat"></select>
 <button id="multiCatBtn" class="multiCatBtn" onclick="toggleMultiCatPanel()">項目を選択</button>
 <div id="multiCatPanel" class="multiCatPanel">
   <div class="small">表示したい項目を選択できます。</div>
@@ -1958,6 +1970,111 @@ function toggleHistory(){
   else {
     historyPanel.classList.toggle('show');
     historyPanel.innerHTML = '<b>再生履歴</b>' + body;
+  }
+}
+</script>
+
+
+<script>
+/* 履歴表示シンプル化パッチ：時刻・言語名を非表示、日本語＋翻訳文だけ表示 */
+function historySimpleText(x){
+  const jp = (x && x.jp) ? String(x.jp) : '';
+  const foreign = (x && (x.t || x.text)) ? String(x.t || x.text) : '';
+  return { jp, foreign };
+}
+
+function historyLangFromLabel(label){
+  if(label === 'ベトナム語')return 'vi';
+  if(label === '英語')return 'en';
+  if(label === '中国語')return 'zh';
+  if(label === 'ポルトガル語')return 'pt';
+  return (typeof lang !== 'undefined' && lang.value) ? lang.value : 'vi';
+}
+
+function pickVoiceForHistory(code){
+  try{
+    const list = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
+    const exact = list.find(v => (v.lang||'').toLowerCase() === String(code||'').toLowerCase());
+    if(exact)return exact;
+    const prefix = String(code||'').split('-')[0].toLowerCase();
+    return list.find(v => (v.lang||'').toLowerCase().startsWith(prefix)) || null;
+  }catch(_){
+    return null;
+  }
+}
+
+function speakHistoryText(text, langKey){
+  if(!text)return;
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const cfg = (typeof LANGS !== 'undefined' && LANGS[langKey]) ? LANGS[langKey] : {code:'vi-VN'};
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = cfg.code || 'vi-VN';
+  const v = pickVoiceForHistory(u.lang);
+  if(v)u.voice = v;
+  try{u.rate = parseFloat(rate.value) || 0.9;}catch(_){u.rate = 0.9;}
+  speechSynthesis.speak(u);
+}
+
+function speakHistory(indexFromNewest){
+  const items = (history || []).slice().reverse();
+  const item = items[indexFromNewest];
+  if(!item)return;
+
+  const text = item.t || item.text || '';
+  const langKey = item.lang || historyLangFromLabel(item.label);
+  if(text){
+    speakHistoryText(text, langKey);
+    return;
+  }
+
+  const p = (typeof findPhraseFromHistoryItem === 'function') ? findPhraseFromHistoryItem(item) : null;
+  if(p){
+    const l = (typeof lang !== 'undefined' && lang.value) ? lang.value : 'vi';
+    if(typeof speak === 'function') speak(p[l] || p.vi || p.jp, p.jp);
+    return;
+  }
+
+  alert('再生できる履歴がありません');
+}
+
+function simpleHistoryRow(x, i){
+  const t = historySimpleText(x);
+  const jpLine = t.jp ? '<div class="histJp">' + esc(t.jp) + '</div>' : '';
+  const foreignLine = t.foreign ? '<div class="histForeign">' + esc(t.foreign) + '</div>' : '';
+  return '<div class="histRow simpleHistRow">' +
+    '<div class="histText" onclick="speakHistory(' + i + ')">' +
+      jpLine + foreignLine +
+    '</div>' +
+    '<div class="histBtns">' +
+      '<button class="histReplayBtn" onclick="speakHistory(' + i + ')">再生</button>' +
+      '<button class="histDeleteBtn" onclick="deleteHistoryItem(' + i + ',event)">削除</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function toggleHistory(){
+  const items = (history || []).slice().reverse();
+  if(!items.length){
+    if(typeof openCommonPanel === 'function'){
+      openCommonPanel('履歴','<p class="small">履歴はありません。</p>');
+    }else if(typeof historyPanel !== 'undefined'){
+      historyPanel.classList.toggle('show');
+      historyPanel.innerHTML = '<b>履歴</b><p>履歴はまだありません。</p>';
+    }
+    return;
+  }
+
+  const body =
+    '<div class="historyHint">日本語と翻訳文だけを表示します。再生ボタンで音声を聞けます。</div>' +
+    '<button class="formbtn warn" onclick="clearAllHistoryFromPanel()">履歴をすべて削除</button>' +
+    items.map((x,i)=>simpleHistoryRow(x,i)).join('');
+
+  if(typeof openCommonPanel === 'function'){
+    openCommonPanel('履歴', body);
+  }else if(typeof historyPanel !== 'undefined'){
+    historyPanel.classList.toggle('show');
+    historyPanel.innerHTML = '<b>履歴</b>' + body;
   }
 }
 </script>
